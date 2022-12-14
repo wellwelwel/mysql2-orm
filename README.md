@@ -1,5 +1,5 @@
 <h2 align="center">MySQL ORM</h2>
-<p align="center">🎲 This is a <b>personal ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+<p align="center">🎲 This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
 
 ## Install
 
@@ -22,7 +22,7 @@ const mysql = new MySQL({
    database: 'dbname',
 });
 
-// await mysql.connect();
+await mysql.connect();
 
 // mysql.end();
 ```
@@ -187,18 +187,20 @@ const mysql = new MySQL({
 
 #### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
 
--  Executing a generic query:
-
-   ```javascript
-   const [pokemons] = await mysql.execute('SELECT * FROM `pokemons`');
-
-   const [firePokemons] = await mysql.execute('SELECT * FROM `pokemons` WHERE `type` = ?', ['fire']);
-   ```
-
 -  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
 
    ```javascript
    const mysql2 = mysql.connection;
+
+   /**
+    * mysql2.execute,
+    * mysql2.beginTransaction,
+    * mysql2.commit,
+    * mysql2.rollback,
+    * etc.
+    *
+    * See all options in: https://github.com/sidorares/node-mysql2
+    */
    ```
 
 <hr />
