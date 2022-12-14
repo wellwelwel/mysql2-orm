@@ -1,0 +1,44 @@
+{
+   "name": "mysql2-orm",
+   "main": "./src/index.js",
+   "version": "0.1.0",
+   "type": "module",
+   "scripts": {
+      "init": "npm i --ignore-scripts;",
+      "init:update": "npm run init; npm run update;",
+      "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
+      "update:patch": "npm run update; npm version patch --no-git-tag-version;",
+      "update:minor": "npm run update; npm version minor --no-git-tag-version;",
+      "update:major": "npm run update; npm version major --no-git-tag-version;"
+   },
+   "devDependencies": {
+      "packages-update": "^1.2.0",
+      "prettier": "^2.8.1"
+   },
+   "license": "MIT",
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/wellwelwel/mysql2-orm.git"
+   },
+   "keywords": [
+      "mysql",
+      "mysql2",
+      "orm",
+      "extend",
+      "extends",
+      "extender"
+   ],
+   "author": "https://github.com/wellwelwel",
+   "bugs": {
+      "url": "https://github.com/wellwelwel/mysql2-orm/issues"
+   },
+   "homepage": "https://github.com/wellwelwel/mysql2-orm#readme",
+   "description": "🎲 A personal ORM extending the package \"mysql2\"",
+   "engines": {
+      "node": ">=14.18.0 || >=16.0.0",
+      "npm": ">=7.0.2"
+   },
+   "dependencies": {
+      "mysql2": "^2.3.3"
+   }
+}
