@@ -31,7 +31,7 @@ await mysql.connect();
 
 #### SELECT
 
--  Selecting all rows
+-  Select all rows
 
    ```javascript
    await mysql.select({
@@ -45,7 +45,7 @@ await mysql.connect();
     */
    ```
 
--  Selecting specific rows
+-  Select specific rows
 
    ```javascript
    await mysql.select({
