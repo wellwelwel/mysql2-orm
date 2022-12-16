@@ -1,5 +1,5 @@
 <h2 align="center">MySQL ORM</h2>
-<p align="center">This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+<p align="center">🎲 This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
 
 ## Install
 
