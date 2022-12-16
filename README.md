@@ -216,12 +216,19 @@ mysql.end();
    }
    ```
 
-   <hr />
+<hr />
 
 ### Notes
 
 -  See practical examples in [samples](./samples/)
 -  Use `verbose` to see final queries in console
+-  Upcoming features
+   -  [x] [`INSERT`](./samples/insert.js)
+   -  [x] [`SELECT`](./samples/select.js)
+   -  [x] [`UPDATE`](./samples/update.js)
+   -  [x] [`TRANSACTION`](./samples/transaction.js)
+   -  [ ] JOIN
+   -  [ ] OFFSET
 
 <hr />
 
