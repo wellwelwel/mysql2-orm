@@ -61,12 +61,12 @@ mysql.end();
 
    ```javascript
    await mysql.select({
-      columns: ['name', 'type'], // default: '*' | Accepts a string with columns or an array
+      columns: ['name', 'type'],
       table: 'pokemons',
       where: '`type` IN(?, ?)',
       params: ['water', 'grass'],
       limit: 2,
-      orderBy: ['name', 'DESC'], // [ 'column' ] || [ 'column', 'ASC' | 'DESC' ]
+      orderBy: ['name', 'DESC'],
    });
 
    // Returns an array with the results
@@ -92,6 +92,12 @@ mysql.end();
    ```sql
    SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
    ```
+
+<br />
+
+> `columns`, `where`, `params`, `limit` and `orderBy` are optionals  
+> `columns`: the default value is `'*'` and accepts a string or an array with the columns  
+> `orderBy`: `[ 'column' ]` or `[ 'column', 'ASC' | 'DESC' ]`
 
 <hr />
 
@@ -158,10 +164,12 @@ mysql.end();
 
    ```sql
    UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
-   --params: [ 'Squirtle', 'water', 2 ]
+   -- params: [ 'Squirtle', 'water', 2 ]
    ```
 
-   -  `where`, `params` and `limit` are optionals 😉
+<br />
+
+> `where`, `params` and `limit` are optionals
 
 <hr />
 
