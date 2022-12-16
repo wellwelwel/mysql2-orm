@@ -156,10 +156,10 @@ mysql.end();
    // Returns the number of affectedRows
    ```
 
-   ```sql
-   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
-   --params: [ 'Squirtle', 'water', 2 ]
-   ```
+   > ```sql
+   > UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
+   > --params: [ 'Squirtle', 'water', 2 ]
+   > ```
 
    -  `where`, `params` and `limit` are optionals 😉
 
