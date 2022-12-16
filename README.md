@@ -38,12 +38,12 @@ await mysql.connect();
       table: 'pokemons',
    });
 
-   /**
-    * QUERY: "SELECT * FROM `pokemons`;"
-    *
-    * Returns an array with the results
-    */
+   // Returns an array with the results
    ```
+
+   > ```sql
+   > SELECT * FROM `pokemons`;
+   > ```
 
 -  Select specific rows
 
@@ -57,13 +57,13 @@ await mysql.connect();
       orderBy: ['name', 'DESC'], // [ 'column' ] || [ 'column', 'ASC' | 'DESC' ]
    });
 
-   /**
-    * QUERY: "SELECT `name`, `type` FROM `pokemons` WHERE `type` IN(?, ?) ORDER BY `name` DESC LIMIT 2;"
-    * PARAMS: [ 'water', 'grass' ]
-    *
-    * Returns an array with the results
-    */
+   // Returns an array with the results
    ```
+
+   > ```sql
+   > SELECT `name`, `type` FROM `pokemons` WHERE `type` IN(?, ?) ORDER BY `name` DESC LIMIT 2;
+   > -- params: [ 'water', 'grass' ]
+   > ```
 
 -  Count all rows
 
@@ -74,12 +74,12 @@ await mysql.connect();
       limit: 1,
    });
 
-   /**
-    * QUERY: "SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;"
-    *
-    * Because "limit: 1", it returns a direct object with the result: { total: ... }
-    */
+   // Because "limit: 1", it returns a direct object with the result: { total: ... }
    ```
+
+   > ```sql
+   > SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
+   > ```
 
 <hr />
 
@@ -96,13 +96,13 @@ await mysql.connect();
       },
    });
 
-   /**
-    * QUERY: "INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);"
-    * PARAMS: [ 'Mew', 'psychic' ]
-    *
-    * Returns: last insert id
-    */
+   // Returns: last insert id
    ```
+
+   > ```sql
+   > INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
+   > -- params: [ 'Mew', 'psychic' ]
+   > ```
 
 -  Insert multiple rows
 
@@ -115,13 +115,13 @@ await mysql.connect();
       ],
    });
 
-   /**
-    * QUERY: "INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);"
-    * PARAMS: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
-    *
-    * Returns: first row id from multiple insert
-    */
+   // Returns: first row id from multiple insert
    ```
+
+   > ```sql
+   > INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
+   > -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
+   > ```
 
 <hr />
 
@@ -141,12 +141,12 @@ await mysql.connect();
       limit: 1,
    });
 
-   /**
-    * QUERY: "UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;"
-    * PARAMS: [ 'Squirtle', 'water', 2 ]
-    *
-    * Returns the number of affectedRows
-    */
+   // Returns the number of affectedRows
+   ```
+
+   ```sql
+   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
+   --params: [ 'Squirtle', 'water', 2 ]
    ```
 
    -  `where`, `params` and `limit` are optionals 😉
