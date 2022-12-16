@@ -11,29 +11,13 @@ import MySQL from '../src/index.js';
 
    mysql.verbose = true; // default: false | Print the query and params to console
 
-   // Single column update
+   // Example
    const way1 = await mysql.update({
       table: 'pokemons',
-      set: ['name', 'Charizard'],
-      where: '`id` = ?',
-      params: ['48'],
-      limit: 1,
-   });
-
-   /**
-    * QUERY: "UPDATE `pokemons` SET `name` = ? WHERE `id` = ? LIMIT 1;"
-    * PARAMS: [ 'Charizard', '48' ]
-    *
-    * Returns the number of affectedRows
-    */
-
-   // Multiple columns update
-   const way2 = await mysql.update({
-      table: 'pokemons',
-      set: [
-         ['name', 'Squirtle'],
-         ['type', 'water'],
-      ],
+      set: {
+         name: 'Squirtle',
+         type: 'water',
+      },
       where: '`id` = ?',
       params: [2],
       limit: 1,
@@ -49,5 +33,4 @@ import MySQL from '../src/index.js';
    mysql.end();
 
    console.log(way1);
-   console.log(way2);
 })();

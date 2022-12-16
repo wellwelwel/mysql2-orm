@@ -18,24 +18,13 @@ import MySQL from '../src/index.js';
 
    mysql.verbose = true; // default: false | Print the query and params to console
 
-   // Put only values
+   // Insert a row
    const way1 = await mysql.insert({
       table: 'pokemons',
-      values: [null, 'Eevee', 'normal'],
-   });
-
-   /**
-    * QUERY: "INSERT INTO `pokemons` VALUES (?, ?, ?);"
-    * PARAMS: [ null, 'Eevee', 'normal' ]
-    *
-    * Returns: last insert id
-    */
-
-   // Put values by specified columns
-   const way2 = await mysql.insert({
-      table: 'pokemons',
-      columns: ['name', 'type'],
-      values: ['Mew', 'psychic'],
+      values: {
+         name: 'Mew',
+         type: 'psychic',
+      },
    });
 
    /**
@@ -46,12 +35,11 @@ import MySQL from '../src/index.js';
     */
 
    // Insert multiple rows
-   const way3 = await mysql.insert({
+   const way2 = await mysql.insert({
       table: 'pokemons',
-      columns: ['name', 'type'],
       values: [
-         ['Pichu', 'electric'],
-         ['Mewtwo', 'psychic'],
+         { name: 'Pichu', type: 'electric' },
+         { name: 'Mewtwo', type: 'psychic' },
       ],
    });
 
@@ -66,5 +54,4 @@ import MySQL from '../src/index.js';
 
    console.log(way1);
    console.log(way2);
-   console.log(way3);
 })();

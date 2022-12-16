@@ -12,7 +12,7 @@
       "update:major": "npm run update; npm version major --no-git-tag-version;"
    },
    "devDependencies": {
-      "packages-update": "^1.2.0",
+      "packages-update": "^1.2.1",
       "prettier": "^2.8.1"
    },
    "license": "MIT",

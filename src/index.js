@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import forceArray from '../helpers/force-array.js';
 
 const defaultOptions = {
    select: {
@@ -21,31 +22,6 @@ const defaultOptions = {
       limit: false,
       params: [],
    },
-};
-
-const forceValuesToArray = (parentArray) => {
-   if (!Array.isArray(parentArray[0])) return [parentArray];
-   return parentArray || [];
-};
-
-const setInsertValues = (parentArray) => {
-   const items = forceValuesToArray(parentArray);
-   const params = [];
-
-   const setValues = items.map((item) => {
-      const values = item.map((value) => {
-         params.push(value);
-
-         return '?';
-      });
-
-      return `(${values.join(', ')})`;
-   });
-
-   return {
-      values: setValues,
-      params,
-   };
 };
 
 export default class MySQL {
@@ -106,13 +82,29 @@ export default class MySQL {
             const defaults = { ...defaultOptions.insert, ...options };
             const { table } = defaults;
 
-            const { values, params } = setInsertValues(defaults.values);
+            const set = {
+               columns: [],
+               values: [],
+               params: [],
+            };
 
-            const columns =
-               defaults?.columns?.length > 0
-                  ? ' (' + defaults.columns.map((column) => `\`${column}\``).join(', ') + ')'
-                  : '';
-            const query = `INSERT INTO \`${table}\`${columns} VALUES ${values.join(', ')};`;
+            forceArray(defaults.values).forEach((insertion) => {
+               const totalColumns = Object?.keys(insertion)?.length;
+               const bindValues = Array(totalColumns).fill('?');
+
+               set.values.push(`(${bindValues.join(', ')})`);
+
+               for (const column in insertion) {
+                  !set.columns.includes(`\`${column}\``) && set.columns.push(`\`${column}\``);
+                  set.params.push(insertion[column]);
+               }
+            });
+
+            const columns = set.columns.join(', ');
+            const values = set.values.join(', ');
+            const { params } = set;
+
+            const query = `INSERT INTO \`${table}\` (${columns}) VALUES ${values};`;
 
             this.verbose && console.log(query, params);
 
@@ -132,18 +124,21 @@ export default class MySQL {
             const defaults = { ...defaultOptions.update, ...options };
             const { table } = defaults;
 
-            const setParams = [];
-            const set = forceValuesToArray(defaults.set)
-               .map(([column, value]) => {
-                  setParams.push(value);
-                  return `\`${column}\` = ?`;
-               })
-               .join(', ');
+            const set = {
+               columns: [],
+               params: [],
+            };
+
+            for (const column in defaults.set) {
+               set.columns.push(`\`${column}\` = ?`);
+               set.params.push(defaults.set[column]);
+            }
+
             const where = defaults.where ? ` WHERE ${defaults.where}` : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
-            const params = [...setParams, ...defaults.params];
+            const params = [...set.params, ...defaults.params];
 
-            const query = `UPDATE \`${table}\` SET ${set}${where}${limit};`;
+            const query = `UPDATE \`${table}\` SET ${set.columns.join(', ')}${where}${limit};`;
             const [results] = await this.connection.execute(query, params);
 
             this.verbose && console.log(query, params);

@@ -85,29 +85,15 @@ await mysql.connect();
 
 #### INSERT
 
--  Full columns insertion
+-  Insert a single row
 
    ```javascript
    await mysql.insert({
       table: 'pokemons',
-      values: [null, 'Eevee', 'normal'], // `id`, `name`, `type`
-   });
-
-   /**
-    * QUERY: "INSERT INTO `pokemons` VALUES (?, ?, ?);"
-    * PARAMS: [ null, 'Eevee', 'normal' ]
-    *
-    * Returns: last insert id
-    */
-   ```
-
--  Insertion by specified columns
-
-   ```javascript
-   await mysql.insert({
-      table: 'pokemons',
-      columns: ['name', 'type'],
-      values: ['Mew', 'psychic'],
+      values: {
+         name: 'Mew',
+         type: 'psychic',
+      },
    });
 
    /**
@@ -123,10 +109,9 @@ await mysql.connect();
    ```js
    await mysql.insert({
       table: 'pokemons',
-      columns: ['name', 'type'],
       values: [
-         ['Pichu', 'electric'],
-         ['Mewtwo', 'psychic'],
+         { name: 'Pichu', type: 'electric' },
+         { name: 'Mewtwo', type: 'psychic' },
       ],
    });
 
@@ -142,34 +127,15 @@ await mysql.connect();
 
 #### UPDATE
 
--  Single column update
+-  Example
 
    ```javascript
    await mysql.update({
       table: 'pokemons',
-      set: ['name', 'Charizard'],
-      where: '`id` = ?',
-      params: ['48'],
-      limit: 1,
-   });
-
-   /**
-    * QUERY: "UPDATE `pokemons` SET `name` = ? WHERE `id` = ? LIMIT 1;"
-    * PARAMS: [ 'Charizard', '48' ]
-    *
-    * Returns the number of affectedRows
-    */
-   ```
-
--  Multiple columns update
-
-   ```javascript
-   await mysql.update({
-      table: 'pokemons',
-      set: [
-         ['name', 'Squirtle'],
-         ['type', 'water'],
-      ],
+      set: {
+         name: 'Squirtle',
+         type: 'water',
+      },
       where: '`id` = ?',
       params: [2],
       limit: 1,
@@ -182,6 +148,8 @@ await mysql.connect();
     * Returns the number of affectedRows
     */
    ```
+
+   -  `where`, `params` and `limit` are optionals 😉
 
 <hr />
 
