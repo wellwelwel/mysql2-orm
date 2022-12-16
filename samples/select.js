@@ -9,7 +9,7 @@ import MySQL from '../src/index.js';
       database: 'mydb',
    });
 
-   mysql.verbose = true;
+   mysql.verbose = true; // Print the query and params to console
 
    const way1 = await mysql.select({
       table: 'pokemons',
@@ -23,12 +23,12 @@ import MySQL from '../src/index.js';
     */
 
    const way2 = await mysql.select({
-      columns: ['name', 'type'], // default: '*' | Accepts a string with columns or an array
+      columns: ['name', 'type'],
       table: 'pokemons',
       where: '`type` IN(?, ?)',
       params: ['water', 'grass'],
       limit: 2,
-      orderBy: ['name', 'DESC'], // [ 'column' ] || [ 'column', 'ASC' | 'DESC' ]
+      orderBy: ['name', 'DESC'],
    });
 
    /**

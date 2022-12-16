@@ -150,21 +150,21 @@ export default class MySQL {
          }
       };
 
-      this.execute = async (query, params = null) => {
+      this.end = async () => {
          try {
-            await this.connect();
-
-            return (await this.connection.execute(query, params)) || false;
+            await this.connection.end();
+            return true;
          } catch (error) {
             this.verbose && console.error(error);
             return false;
          }
       };
 
-      this.end = async () => {
+      this.getConnection = async () => {
          try {
-            await this.connection.end();
-            return true;
+            await this.connect();
+
+            return this.connection || false;
          } catch (error) {
             this.verbose && console.error(error);
             return false;

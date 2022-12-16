@@ -178,7 +178,7 @@ mysql.end();
 -  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
 
    ```javascript
-   const mysql2 = mysql.connection;
+   const mysql2 = await mysql.getConnection();
 
    /**
     * mysql2.execute,
@@ -190,6 +190,38 @@ mysql.end();
     * See all options in: https://github.com/sidorares/node-mysql2
     */
    ```
+
+-  Mixing the Packages
+
+   ```javascript
+   await mysql2.beginTransaction();
+
+   try {
+      const inserted = await mysql.insert({
+         table: 'pokemons',
+         values: [
+            { name: 'Pichu', type: 'electric' },
+            { name: 'Mewtwo', type: 'psychic' },
+         ],
+      });
+
+      if (!inserted) throw new Error('Something is wrong, coming back');
+
+      await mysql2.commit();
+   } catch (error) {
+      await mysql2.rollback();
+      console.error(error.message);
+   } finally {
+      await mysql.end();
+   }
+   ```
+
+   <hr />
+
+### Notes
+
+-  See practical examples in [samples](./samples/)
+-  Use `verbose` to see final queries in console
 
 <hr />
 

@@ -9,7 +9,7 @@ import MySQL from '../src/index.js';
       database: 'mydb',
    });
 
-   mysql.verbose = true; // default: false | Print the query and params to console
+   mysql.verbose = true; // Print the query and params to console
 
    // Example
    const way1 = await mysql.update({
