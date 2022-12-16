@@ -187,10 +187,10 @@ mysql.end();
 
 ### Credits
 
-| Contributors                                     | GitHub                                                                           |
-| ------------------------------------------------ | -------------------------------------------------------------------------------- |
-| [`mysql2`](https://www.npmjs.com/package/mysql2) | [![sidorares](./.github/assets/readme/mysql2.svg)](https://github.com/sidorares) |
-| `mysql2-orm`                                     | [![wellwelwel](./.github/assets/readme/orm.svg)](https://github.com/wellwelwel)  |
+| Project                                              | Author                                                                           |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [`mysql2`](https://github.com/sidorares/node-mysql2) | [![sidorares](./.github/assets/readme/mysql2.svg)](https://github.com/sidorares) |
+| `mysql2-orm`                                         | [![wellwelwel](./.github/assets/readme/orm.svg)](https://github.com/wellwelwel)  |
 
 <hr />
 
