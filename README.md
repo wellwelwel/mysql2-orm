@@ -1,5 +1,5 @@
 <h2 align="center">MySQL ORM</h2>
-<p align="center">This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+<p align="center">This is a basic <b>ORM project</bcreated from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
 
 ## Install
 
@@ -53,9 +53,9 @@ mysql.end();
    // Returns an array with the results
    ```
 
-   > ```sql
-   > SELECT * FROM `pokemons`;
-   > ```
+   ```sql
+   SELECT * FROM `pokemons`;
+   ```
 
 -  Select specific rows
 
@@ -72,10 +72,10 @@ mysql.end();
    // Returns an array with the results
    ```
 
-   > ```sql
-   > SELECT `name`, `type` FROM `pokemons` WHERE `type` IN(?, ?) ORDER BY `name` DESC LIMIT 2;
-   > -- params: [ 'water', 'grass' ]
-   > ```
+   ```sql
+   SELECT `name`, `type` FROM `pokemons` WHERE `type` IN(?, ?) ORDER BY `name` DESC LIMIT 2;
+   -- params: [ 'water', 'grass' ]
+   ```
 
 -  Count all rows
 
@@ -89,9 +89,9 @@ mysql.end();
    // Because "limit: 1", it returns a direct object with the result: { total: ... }
    ```
 
-   > ```sql
-   > SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
-   > ```
+   ```sql
+   SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
+   ```
 
 <hr />
 
@@ -111,10 +111,10 @@ mysql.end();
    // Returns: last insert id
    ```
 
-   > ```sql
-   > INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
-   > -- params: [ 'Mew', 'psychic' ]
-   > ```
+   ```sql
+   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
+   -- params: [ 'Mew', 'psychic' ]
+   ```
 
 -  Insert multiple rows
 
@@ -130,10 +130,10 @@ mysql.end();
    // Returns: first row id from multiple insert
    ```
 
-   > ```sql
-   > INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
-   > -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
-   > ```
+   ```sql
+   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
+   -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
+   ```
 
 <hr />
 
@@ -156,10 +156,10 @@ mysql.end();
    // Returns the number of affectedRows
    ```
 
-   > ```sql
-   > UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
-   > --params: [ 'Squirtle', 'water', 2 ]
-   > ```
+   ```sql
+   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
+   --params: [ 'Squirtle', 'water', 2 ]
+   ```
 
    -  `where`, `params` and `limit` are optionals 😉
 
