@@ -41,7 +41,7 @@ mysql.end();
 
 ### Querying
 
-#### SELECT
+#### Select
 
 -  Select all rows
 
@@ -95,7 +95,7 @@ mysql.end();
 
 <hr />
 
-#### INSERT
+#### Insert
 
 -  Insert a single row
 
@@ -137,7 +137,7 @@ mysql.end();
 
 <hr />
 
-#### UPDATE
+#### Update
 
 -  Example
 
