@@ -1,5 +1,5 @@
 <h2 align="center">MySQL ORM</h2>
-<p align="center">⇢ This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+<p align="center">This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
 
 ## Install
 
@@ -9,9 +9,9 @@
 
 <hr />
 
-## Usage
+### Usage
 
-### Setup
+#### Setup
 
 ```javascript
 import MySQL from 'mysql2-orm';
@@ -25,13 +25,13 @@ const mysql = new MySQL({
 });
 ```
 
-### Connect
+#### Connect
 
 ```javascript
 await mysql.connect();
 ```
 
-### Close connection
+#### Close connection
 
 ```javascript
 mysql.end();
@@ -39,7 +39,9 @@ mysql.end();
 
 <hr />
 
-#### ⇢ SELECT
+### Querying
+
+#### SELECT
 
 -  Select all rows
 
@@ -93,7 +95,7 @@ mysql.end();
 
 <hr />
 
-#### ⇢ INSERT
+#### INSERT
 
 -  Insert a single row
 
@@ -135,7 +137,7 @@ mysql.end();
 
 <hr />
 
-#### ⇢ UPDATE
+#### UPDATE
 
 -  Example
 
@@ -163,7 +165,7 @@ mysql.end();
 
 <hr />
 
-#### ⇢ [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
+#### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
 
 -  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
 
@@ -193,7 +195,3 @@ mysql.end();
 <hr />
 
 -  Check the original [**mysql2**](https://www.npmjs.com/package/mysql2) project [**here**](https://github.com/sidorares/node-mysql2).
-
-```
-
-```
