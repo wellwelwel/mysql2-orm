@@ -18,7 +18,7 @@ import MySQL from '../src/index.js';
 
    const mysql2 = await mysql.getConnection();
 
-   mysql.verbose = true; // Print the query and params to console
+   mysql.verbose = true;
 
    await mysql2.beginTransaction();
 

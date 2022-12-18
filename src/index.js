@@ -10,11 +10,13 @@ const defaultOptions = {
       limit: false,
       orderBy: [null, 'ASC'],
       params: [],
+      mountOnly: false,
    },
    insert: {
       table: '',
       columns: [],
       values: [],
+      mountOnly: false,
    },
    update: {
       table: '',
@@ -22,6 +24,7 @@ const defaultOptions = {
       where: null,
       limit: false,
       params: [],
+      mountOnly: false,
    },
 };
 
@@ -65,9 +68,16 @@ export default class MySQL {
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
 
             const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${orderBy}${limit};`;
-            const [rows] = await this.connection.execute(query, params);
+
+            if (defaults.mountOnly)
+               return {
+                  query,
+                  params,
+               };
 
             this.verbose && console.log(query, params);
+
+            const [rows] = await this.connection.execute(query, params);
 
             if (defaults.limit === 1) return rows[0] || false;
             return rows || false;
@@ -108,6 +118,12 @@ export default class MySQL {
 
             const query = `INSERT INTO \`${table}\` (${columns}) VALUES ${values};`;
 
+            if (defaults.mountOnly)
+               return {
+                  query,
+                  params,
+               };
+
             this.verbose && console.log(query, params);
 
             const [results] = await this.connection.execute(query, params);
@@ -141,9 +157,16 @@ export default class MySQL {
             const params = [...set.params, ...defaults.params];
 
             const query = `UPDATE \`${table}\` SET ${set.columns.join(', ')}${where}${limit};`;
-            const [results] = await this.connection.execute(query, params);
+
+            if (defaults.mountOnly)
+               return {
+                  query,
+                  params,
+               };
 
             this.verbose && console.log(query, params);
+
+            const [results] = await this.connection.execute(query, params);
 
             return results?.affectedRows || false;
          } catch (error) {

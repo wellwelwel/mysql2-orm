@@ -16,7 +16,7 @@ import MySQL from '../src/index.js';
       database: 'mydb',
    });
 
-   mysql.verbose = true; // Print the query and params to console
+   mysql.verbose = true;
 
    // Insert a row
    const way1 = await mysql.insert({

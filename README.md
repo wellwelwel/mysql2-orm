@@ -31,10 +31,31 @@ const mysql = new MySQL({
 await mysql.connect();
 ```
 
+#### Verbose
+
+```javascript
+mysql.verbose = true;
+```
+
+-  Output queries, params and errors to console
+
+#### Mount Only
+
+```javascript
+await mysql.select({
+   // ...,
+   mountOnly: true,
+});
+```
+
+-  Returns an object with final query and params, without execute the query
+-  Works with `select`, `insert` and `update`
+-  This is very useful for subqueries 😉
+
 #### Close connection
 
 ```javascript
-mysql.end();
+await mysql.end();
 ```
 
 <hr />
@@ -222,13 +243,22 @@ mysql.end();
 
 -  See practical examples in [samples](./samples/)
 -  Use `verbose` to see final queries in console
--  Upcoming features
-   -  [x] [`INSERT`](./samples/insert.js)
-   -  [x] [`SELECT`](./samples/select.js)
-   -  [x] [`UPDATE`](./samples/update.js)
-   -  [x] [`TRANSACTION`](./samples/transaction.js)
-   -  [ ] JOIN
-   -  [ ] OFFSET
+
+-  -  [ ] Features
+      -  [ ] [`SELECT`](./samples/select.js)
+         -  [x] DISTINCT
+         -  [x] WHERE
+         -  [x] ORDER
+         -  [x] LIMIT
+         -  [ ] GROUP
+         -  [ ] OFFSET
+         -  [ ] JOIN
+         -  [ ] UNION
+      -  [x] [`UPDATE`](./samples/update.js)
+         -  [x] WHERE
+         -  [x] LIMIT
+      -  [x] [`INSERT`](./samples/insert.js)
+      -  [x] [`TRANSACTION`](./samples/transaction.js)
 
 <hr />
 

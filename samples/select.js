@@ -9,7 +9,7 @@ import MySQL from '../src/index.js';
       database: 'mydb',
    });
 
-   mysql.verbose = true; // Print the query and params to console
+   mysql.verbose = true;
 
    const way1 = await mysql.select({
       table: 'pokemons',
