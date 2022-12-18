@@ -31,14 +31,6 @@ const mysql = new MySQL({
 await mysql.connect();
 ```
 
-#### Verbose
-
-```javascript
-mysql.verbose = true;
-```
-
--  Output queries, params and errors to console
-
 #### Mount Only
 
 ```javascript
