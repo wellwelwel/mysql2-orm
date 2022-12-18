@@ -3,6 +3,7 @@ import forceArray from '../helpers/force-array.js';
 
 const defaultOptions = {
    select: {
+      distinct: false,
       columns: '*' || [],
       table: '',
       where: null,
@@ -52,6 +53,7 @@ export default class MySQL {
             const defaults = { ...defaultOptions.select, ...options };
             const { table, params } = defaults;
 
+            const distinct = defaults.distinct ? 'DISTINCT ' : '';
             const columns =
                typeof defaults.columns === 'string'
                   ? defaults.columns
@@ -62,7 +64,7 @@ export default class MySQL {
                : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
 
-            const query = `SELECT ${columns} FROM \`${table}\`${where}${orderBy}${limit};`;
+            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${orderBy}${limit};`;
             const [rows] = await this.connection.execute(query, params);
 
             this.verbose && console.log(query, params);

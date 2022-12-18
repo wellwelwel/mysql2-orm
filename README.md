@@ -95,7 +95,7 @@ mysql.end();
 
 <br />
 
-> `columns`, `where`, `params`, `limit` and `orderBy` are optionals  
+> `distinct`, `columns`, `where`, `params`, `limit` and `orderBy` are optionals  
 > `columns`: the default value is `'*'` and accepts a string or an array with the columns  
 > `orderBy`: `[ 'column' ]` or `[ 'column', 'ASC' | 'DESC' ]`
 
