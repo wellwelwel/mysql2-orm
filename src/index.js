@@ -8,6 +8,7 @@ const defaultOptions = {
       table: '',
       where: null,
       limit: false,
+      offset: null,
       orderBy: [null, 'ASC'],
       params: [],
       mountOnly: false,
@@ -66,8 +67,9 @@ export default class MySQL {
                ? ` ORDER BY \`${defaults.orderBy[0]}\` ${defaults?.orderBy[1] || 'ASC'}`
                : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
+            const offset = defaults.offset > 0 ? ` OFFSET ${defaults.offset}` : '';
 
-            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${orderBy}${limit};`;
+            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${orderBy}${limit}${offset};`;
 
             if (defaults.mountOnly)
                return {

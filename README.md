@@ -248,10 +248,10 @@ await mysql.end();
       -  [ ] [`SELECT`](./samples/select.js)
          -  [x] DISTINCT
          -  [x] WHERE
-         -  [x] ORDER
+         -  [x] ORDER BY
          -  [x] LIMIT
-         -  [ ] GROUP
-         -  [ ] OFFSET
+         -  [x] OFFSET
+         -  [ ] GROUP BY
          -  [ ] JOIN
          -  [ ] UNION
       -  [x] [`UPDATE`](./samples/update.js)
