@@ -48,7 +48,7 @@ await mysql.select({
 });
 ```
 
--  Returns an object with final query and params, without execute the query
+-  Returns an object with the final query and params, without execute the query
 -  Works with `select`, `insert` and `update` ORM functions
 -  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
