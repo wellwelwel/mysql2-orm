@@ -7,8 +7,9 @@ const defaultOptions = {
       columns: '*' || [],
       table: '',
       where: null,
-      limit: false,
+      limit: null,
       offset: null,
+      groupBy: null,
       orderBy: [null, 'ASC'],
       params: [],
       mountOnly: false,
@@ -23,7 +24,7 @@ const defaultOptions = {
       table: '',
       set: [],
       where: null,
-      limit: false,
+      limit: null,
       params: [],
       mountOnly: false,
    },
@@ -63,13 +64,16 @@ export default class MySQL {
                   ? defaults.columns
                   : defaults.columns.map((column) => `\`${column}\``).join(', ');
             const where = defaults.where ? ` WHERE ${defaults.where}` : '';
+            const groupBy = defaults.groupBy ? ` GROUP BY \`${defaults.groupBy}\`` : '';
             const orderBy = defaults.orderBy[0]
                ? ` ORDER BY \`${defaults.orderBy[0]}\` ${defaults?.orderBy[1] || 'ASC'}`
                : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
             const offset = defaults.offset > 0 ? ` OFFSET ${defaults.offset}` : '';
 
-            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${orderBy}${limit}${offset};`;
+            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${groupBy}${orderBy}${limit}${offset}${
+               !defaults.mountOnly ? ';' : ''
+            }`;
 
             if (defaults.mountOnly)
                return {

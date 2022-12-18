@@ -1,10 +1,3 @@
-/**
- * INSERT
- * table: ''
- * columns: [] // optional
- * values: Auto put "?" for each value and split values to params
- */
-
 import MySQL from '../src/index.js';
 
 (async () => {
@@ -23,30 +16,22 @@ import MySQL from '../src/index.js';
    await mysql2.beginTransaction();
 
    try {
-      // Insert a row
-      const way1 = await mysql.insert({
-         table: 'pokemons',
-         values: {
-            name: 'Mew',
-            type: 'psychic',
-         },
+      const insertedA = await mysql.insert({
+         table: 'artificialPokemons',
+         values: { name: 'Mewtwo', type: 'psychic' },
       });
 
-      // Insert multiple rows
-      const way2 = await mysql.insert({
+      const insertedB = await mysql.insert({
          table: 'pokemons',
          values: [
             { name: 'Pichu', type: 'electric' },
-            { name: 'Mewtwo', type: 'psychic' },
+            { name: 'Mew', type: 'psychic' },
          ],
       });
 
-      if (!way1 || !way2) throw new Error('Something is wrong, coming back 👾');
+      if (!insertedA || !insertedB) throw new Error('Something is wrong, coming back 👾');
 
       await mysql2.commit();
-
-      console.log(way1);
-      console.log(way2);
    } catch (error) {
       await mysql2.rollback();
       console.error(error.message);

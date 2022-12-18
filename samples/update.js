@@ -12,25 +12,26 @@ import MySQL from '../src/index.js';
    mysql.verbose = true;
 
    // Example
-   const way1 = await mysql.update({
-      table: 'pokemons',
-      set: {
-         name: 'Squirtle',
-         type: 'water',
-      },
-      where: '`id` = ?',
-      params: [2],
-      limit: 1,
-   });
+   {
+      /**
+       * QUERY: "UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;"
+       * PARAMS: [ 'Squirtle', 'water', 2 ]
+       *
+       * Returns the number of affectedRows
+       */
+      const affectedRows = await mysql.update({
+         table: 'pokemons',
+         set: {
+            name: 'Squirtle',
+            type: 'water',
+         },
+         where: '`id` = ?',
+         params: [2],
+         limit: 1,
+      });
 
-   /**
-    * QUERY: "UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;"
-    * PARAMS: [ 'Squirtle', 'water', 2 ]
-    *
-    * Returns the number of affectedRows
-    */
+      console.log(affectedRows);
+   }
 
-   mysql.end();
-
-   console.log(way1);
+   await mysql.end();
 })();

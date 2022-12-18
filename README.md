@@ -49,8 +49,8 @@ await mysql.select({
 ```
 
 -  Returns an object with final query and params, without execute the query
--  Works with `select`, `insert` and `update`
--  This is very useful for subqueries, `UNION`, `INTERSECT`, etc. 😉
+-  Works with `select`, `insert` and `update` ORM functions
+-  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 #### Close connection
 
@@ -248,16 +248,17 @@ await mysql.end();
       -  [ ] [`SELECT`](./samples/select.js)
          -  [x] DISTINCT
          -  [x] WHERE
+         -  [x] GROUP BY
          -  [x] ORDER BY
          -  [x] LIMIT
          -  [x] OFFSET
-         -  [ ] GROUP BY
          -  [ ] JOIN
       -  [x] [`UPDATE`](./samples/update.js)
          -  [x] WHERE
          -  [x] LIMIT
       -  [x] [`INSERT`](./samples/insert.js)
       -  [x] [`TRANSACTION`](./samples/transaction.js)
+      -  [x] [`SUBQUERIES`](./samples/subqueries.js)
 
 <hr />
 
