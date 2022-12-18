@@ -44,7 +44,7 @@ await mysql.select({
 -  Works with `select`, `insert` and `update` ORM functions
 -  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
-#### Close connection
+#### Close Connection
 
 ```javascript
 await mysql.end();
