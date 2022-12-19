@@ -7,6 +7,15 @@ const defaultOptions = {
       distinct: false,
       columns: '*' || [],
       table: '',
+      join:
+         {
+            type: null,
+            on: {
+               a: null,
+               b: null,
+            },
+            outer: false,
+         } || '',
       where: null,
       limit: null,
       offset: null,
@@ -60,20 +69,36 @@ export default class MySQL {
             const { params } = defaults;
 
             const distinct = defaults.distinct ? 'DISTINCT ' : '';
+
             const columns =
                typeof defaults.columns === 'string'
                   ? defaults.columns
                   : defaults.columns.map((column) => setBacktick(column)).join(', ');
+
             const table = setBacktick(defaults.table);
+
+            const join = forceArray(defaults.join)
+               .map((currentJoin) =>
+                  currentJoin?.on?.a && currentJoin?.on?.b
+                     ? ` ${currentJoin.type.toUpperCase()}${currentJoin?.outer ? ' OUTER' : ''} JOIN ${setBacktick(
+                          currentJoin.table
+                       )} ON ${setBacktick(currentJoin.on.a)} = ${setBacktick(currentJoin.on.b)}`
+                     : ''
+               )
+               .join('');
+
             const where = defaults.where ? ` WHERE ${defaults.where}` : '';
+
             const groupBy = defaults.groupBy ? ` GROUP BY ${setBacktick(defaults.groupBy)}` : '';
+
             const orderBy = defaults.orderBy[0]
                ? ` ORDER BY ${setBacktick(defaults.orderBy[0])} ${defaults?.orderBy[1] || 'ASC'}`
                : '';
+
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
             const offset = defaults.offset > 0 ? ` OFFSET ${defaults.offset}` : '';
 
-            const query = `SELECT ${distinct}${columns} FROM ${table}${where}${groupBy}${orderBy}${limit}${offset}${
+            const query = `SELECT ${distinct}${columns} FROM ${table}${join}${where}${groupBy}${orderBy}${limit}${offset}${
                !defaults.mountOnly ? ';' : ''
             }`;
 

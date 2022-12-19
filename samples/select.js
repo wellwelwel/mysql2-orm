@@ -18,7 +18,6 @@ import MySQL from '../src/index.js';
        *
        * Returns an array with the results
        */
-
       const simple = await mysql.select({
          table: 'pokemons',
       });
@@ -33,7 +32,6 @@ import MySQL from '../src/index.js';
        *
        * Returns an array with the results
        */
-
       const advanced = await mysql.select({
          columns: ['name', 'type'],
          table: 'pokemons',
@@ -53,7 +51,6 @@ import MySQL from '../src/index.js';
        *
        * Because "limit: 1", it returns a direct object with the result
        */
-
       const customColumns = await mysql.select({
          columns: 'COUNT(*) AS `total`',
          table: 'pokemons',
@@ -70,7 +67,6 @@ import MySQL from '../src/index.js';
        *
        * Returns an array with the results
        */
-
       const groupBy = await mysql.select({
          columns: '`type`, COUNT(*) AS `total`',
          table: 'pokemons',
@@ -78,6 +74,33 @@ import MySQL from '../src/index.js';
       });
 
       console.log(groupBy, '\n');
+   }
+
+   // JOIN: inner | left | right | cross
+   {
+      /**
+       * QUERY: "SELECT `pokemons`.`name`, `pokemons`.`type` FROM `captureds` LEFT JOIN `pokemons` ON `captureds`.`pokemonId` = `pokemons`.`id` WHERE `userId` = ?;"
+       * PARAMS: [ 1 ]
+       *
+       * Returns an array with the results
+       */
+      const userPokemons = await mysql.select({
+         columns: ['pokemons.name', 'pokemons.type'],
+         table: 'captureds',
+         join: {
+            type: 'left',
+            table: 'pokemons',
+            on: {
+               a: 'captureds.pokemonId',
+               b: 'pokemons.id',
+            },
+            // outer: true,
+         },
+         where: '`userId` = ?',
+         params: [1],
+      });
+
+      console.log(userPokemons, '\n');
    }
 
    await mysql.end();

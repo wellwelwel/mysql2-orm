@@ -31,7 +31,7 @@ const mysql = new MySQL({
 await mysql.connect();
 ```
 
-#### Mount Only
+#### Mount Query Only
 
 ```javascript
 await mysql.select({
@@ -40,7 +40,7 @@ await mysql.select({
 });
 ```
 
--  Returns an object with the final query and params, without execute the query
+-  Returns an object with the final `query` and `params`, without execute the query
 -  Works with `select`, `insert` and `update` ORM functions
 -  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
@@ -106,9 +106,43 @@ await mysql.end();
    SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
    ```
 
+-  JOIN: `inner` | `left` | `right` | `cross`
+
+   ```javascript
+   await mysql.select({
+      columns: ['pokemons.name', 'pokemons.type'],
+      table: 'captureds',
+      join: {
+         type: 'left',
+         // outer: false,
+         table: 'pokemons',
+         on: {
+            a: 'captureds.pokemonId',
+            b: 'pokemons.id',
+         },
+      },
+      where: '`userId` = ?',
+      params: [1],
+   });
+
+   // Returns an array with the results
+   ```
+
+   ```sql
+   SELECT `pokemons`.`name`, `pokemons`.`type`
+   FROM `captureds`
+   LEFT JOIN `pokemons`
+   ON `captureds`.`pokemonId` = `pokemons`.`id`
+   WHERE `userId` = ?;
+   -- params: [ 1 ]
+   ```
+
+   -  The **`join` option** accetps a direct `object` or an `array` with multiple `JOIN`
+   -  ⚠️ When using `join` with dynamic params, remeber that `JOIN` comes before the `WHERE`
+
 <br />
 
-> `distinct`, `columns`, `where`, `params`, `limit` and `orderBy` are optionals  
+> `distinct`, `columns`, `join`, `where`, `params`, `limit` and `orderBy` are optionals  
 > `columns`: the default value is `'*'` and accepts a string or an array with the columns  
 > `orderBy`: `[ 'column' ]` or `[ 'column', 'ASC' | 'DESC' ]`
 
@@ -250,15 +284,15 @@ setBacktick('table.column'); // `table`.`column`
 -  See practical examples in [samples](./samples/)
 -  Use `verbose` to see final queries in console
 
--  -  [ ] Features
-      -  [ ] [`SELECT`](./samples/select.js)
+-  -  [x] Features
+      -  [x] [`SELECT`](./samples/select.js)
          -  [x] DISTINCT
+         -  [x] JOIN
          -  [x] WHERE
          -  [x] GROUP BY
          -  [x] ORDER BY
          -  [x] LIMIT
          -  [x] OFFSET
-         -  [ ] JOIN
       -  [x] [`UPDATE`](./samples/update.js)
          -  [x] WHERE
          -  [x] LIMIT
