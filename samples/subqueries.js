@@ -9,6 +9,7 @@ import MySQL from '../src/index.js';
       database: 'mydb',
    });
 
+   const { setBacktick: backtick } = mysql;
    const mysql2 = await mysql.getConnection();
 
    mysql.verbose = true;
@@ -38,7 +39,7 @@ import MySQL from '../src/index.js';
       const userElectricPokemons = await mysql.select({
          columns: ['name', 'type'],
          table: 'pokemons',
-         where: `\`id\` IN (${getUserPokemonIds.query}) AND \`type\` = ?`,
+         where: `${backtick('id')} IN (${getUserPokemonIds.query}) AND ${backtick('type')} = ?`,
          params: [...getUserPokemonIds.params, 'electric'],
       });
 

@@ -231,6 +231,20 @@ await mysql.end();
 
 <hr />
 
+### Others
+
+#### Backtick
+
+```javascript
+const { setBacktick } = mysql;
+
+setBacktick('table'); // `table`
+setBacktick('column'); // `column`
+setBacktick('table.column'); // `table`.`column`
+```
+
+<hr />
+
 ### Notes
 
 -  See practical examples in [samples](./samples/)

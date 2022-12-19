@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import forceArray from '../helpers/force-array.js';
+import setBacktick from '../helpers/set-backtick.js';
 
 const defaultOptions = {
    select: {
@@ -56,22 +57,23 @@ export default class MySQL {
             await this.connect();
 
             const defaults = { ...defaultOptions.select, ...options };
-            const { table, params } = defaults;
+            const { params } = defaults;
 
             const distinct = defaults.distinct ? 'DISTINCT ' : '';
             const columns =
                typeof defaults.columns === 'string'
                   ? defaults.columns
-                  : defaults.columns.map((column) => `\`${column}\``).join(', ');
+                  : defaults.columns.map((column) => setBacktick(column)).join(', ');
+            const table = setBacktick(defaults.table);
             const where = defaults.where ? ` WHERE ${defaults.where}` : '';
-            const groupBy = defaults.groupBy ? ` GROUP BY \`${defaults.groupBy}\`` : '';
+            const groupBy = defaults.groupBy ? ` GROUP BY ${setBacktick(defaults.groupBy)}` : '';
             const orderBy = defaults.orderBy[0]
-               ? ` ORDER BY \`${defaults.orderBy[0]}\` ${defaults?.orderBy[1] || 'ASC'}`
+               ? ` ORDER BY ${setBacktick(defaults.orderBy[0])} ${defaults?.orderBy[1] || 'ASC'}`
                : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
             const offset = defaults.offset > 0 ? ` OFFSET ${defaults.offset}` : '';
 
-            const query = `SELECT ${distinct}${columns} FROM \`${table}\`${where}${groupBy}${orderBy}${limit}${offset}${
+            const query = `SELECT ${distinct}${columns} FROM ${table}${where}${groupBy}${orderBy}${limit}${offset}${
                !defaults.mountOnly ? ';' : ''
             }`;
 
@@ -98,8 +100,6 @@ export default class MySQL {
             await this.connect();
 
             const defaults = { ...defaultOptions.insert, ...options };
-            const { table } = defaults;
-
             const set = {
                columns: [],
                values: [],
@@ -113,16 +113,17 @@ export default class MySQL {
                set.values.push(`(${bindValues.join(', ')})`);
 
                for (const column in insertion) {
-                  !set.columns.includes(`\`${column}\``) && set.columns.push(`\`${column}\``);
+                  !set.columns.includes(setBacktick(column)) && set.columns.push(setBacktick(column));
                   set.params.push(insertion[column]);
                }
             });
 
+            const table = setBacktick(defaults.table);
             const columns = set.columns.join(', ');
             const values = set.values.join(', ');
             const { params } = set;
 
-            const query = `INSERT INTO \`${table}\` (${columns}) VALUES ${values};`;
+            const query = `INSERT INTO ${table} (${columns}) VALUES ${values};`;
 
             if (defaults.mountOnly)
                return {
@@ -146,23 +147,22 @@ export default class MySQL {
             await this.connect();
 
             const defaults = { ...defaultOptions.update, ...options };
-            const { table } = defaults;
-
             const set = {
                columns: [],
                params: [],
             };
 
             for (const column in defaults.set) {
-               set.columns.push(`\`${column}\` = ?`);
+               set.columns.push(`${setBacktick(column)} = ?`);
                set.params.push(defaults.set[column]);
             }
 
+            const table = setBacktick(defaults.table);
             const where = defaults.where ? ` WHERE ${defaults.where}` : '';
             const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
             const params = [...set.params, ...defaults.params];
 
-            const query = `UPDATE \`${table}\` SET ${set.columns.join(', ')}${where}${limit};`;
+            const query = `UPDATE ${table} SET ${set.columns.join(', ')}${where}${limit};`;
 
             if (defaults.mountOnly)
                return {
@@ -201,6 +201,8 @@ export default class MySQL {
             return false;
          }
       };
+
+      this.setBacktick = (tableOrColumn) => setBacktick(tableOrColumn);
 
       this.verbose = false;
    }
