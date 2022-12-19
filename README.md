@@ -11,11 +11,23 @@
 
 ### Usage
 
-#### Setup
+#### Import
+
+-  ES Modules
 
 ```javascript
 import MySQL from 'mysql2-orm';
+```
 
+-  CommonJS
+
+```javascript
+const MySQL = require('mysql2-orm');
+```
+
+#### Connect
+
+```javascript
 const mysql = new MySQL({
    host: 'localhost',
    port: 3306,
@@ -23,11 +35,7 @@ const mysql = new MySQL({
    password: 'pass',
    database: 'dbname',
 });
-```
 
-#### Connect
-
-```javascript
 await mysql.connect();
 ```
 
