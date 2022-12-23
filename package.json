@@ -40,7 +40,9 @@
       "orm",
       "extend",
       "extends",
-      "extender"
+      "extender",
+      "client",
+      "server"
    ],
    "author": "https://github.com/wellwelwel",
    "bugs": {
@@ -55,7 +57,9 @@
    "files": [
       "index.cjs",
       "index.mjs",
-      "**/**/*.d.ts",
+      "index.d.ts",
+      "types.d.ts",
+      "helpers",
       "samples"
    ],
    "exports": {
