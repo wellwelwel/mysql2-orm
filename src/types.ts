@@ -4,6 +4,15 @@ export type Params = string | number | boolean | null;
 
 export type SetValues = { [column: string]: Params };
 
+export type JoinOptions = {
+   type: 'left' | 'right' | 'inner' | 'cross';
+   on: {
+      a: string;
+      b: string;
+   };
+   outer?: boolean;
+};
+
 export type QueryResults =
    | RowDataPacket
    | RowDataPacket[]
@@ -40,14 +49,7 @@ export interface SelectOptions {
    distinct?: boolean;
    columns?: string | string[];
    table: string;
-   join?: {
-      type: 'left' | 'right' | 'inner' | 'cross';
-      on: {
-         a: string;
-         b: string;
-      };
-      outer?: boolean;
-   };
+   join?: JoinOptions | JoinOptions[];
    where?: string;
    limit?: number;
    offset?: number;
