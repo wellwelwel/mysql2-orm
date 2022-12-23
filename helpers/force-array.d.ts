@@ -1,2 +1,2 @@
-declare const forceArray: (input: any) => any[];
+declare const forceArray: (input: unknown) => any[];
 export default forceArray;

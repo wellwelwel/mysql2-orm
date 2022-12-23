@@ -1,4 +1,4 @@
-const forceArray = (input: any) => {
+const forceArray = (input: unknown) => {
    if (Array.isArray(input)) return input || [];
    return [input] || [];
 };
