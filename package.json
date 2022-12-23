@@ -18,12 +18,12 @@
       "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;"
    },
    "dependencies": {
-      "@types/node": "^18.11.17",
       "mysql2": "^2.3.3"
    },
    "devDependencies": {
       "@babel/preset-env": "^7.20.2",
       "@rollup/plugin-babel": "^6.0.3",
+      "@types/node": "^18.11.17",
       "packages-update": "^1.2.1",
       "prettier": "^2.8.1",
       "rollup": "^3.8.1",
