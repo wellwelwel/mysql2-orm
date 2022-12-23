@@ -15,22 +15,26 @@
 
 -  ES Modules
 
-```javascript
-import { MySQL } from 'mysql2-orm';
-```
+   ```javascript
+   import { MySQL } from 'mysql2-orm';
+   ```
 
 -  CommonJS
 
-```javascript
-const { MySQL } = require('mysql2-orm');
-```
+   ```javascript
+   const { MySQL } = require('mysql2-orm');
+   ```
 
 -  TypeScript
 
-```javascript
-import { MySQL } from 'mysql2-orm';
-import { ... } from 'mysql2-orm/types';
-```
+   ```javascript
+   import { MySQL } from 'mysql2-orm';
+   import { ... } from 'mysql2-orm/types';
+   ```
+
+   -  You will need to install `@types/node`
+
+<hr />
 
 #### Connect
 
@@ -43,19 +47,6 @@ const mysql = new MySQL({
    database: 'dbname',
 });
 ```
-
-#### Mount Query Only
-
-```javascript
-await mysql.select({
-   // ...,
-   mountOnly: true,
-});
-```
-
--  Returns an object with the final `query` and `params`, without execute the query
--  Works with `select`, `insert` and `update` ORM functions
--  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 #### Close Connection
 
@@ -230,6 +221,21 @@ await mysql.end();
 <br />
 
 > `where`, `params` and `limit` are optionals
+
+<hr />
+
+#### Mount Query Only
+
+```javascript
+await mysql.select({
+   // ...
+   mountOnly: true,
+});
+```
+
+-  Returns an object with the final `query` and `params`, without execute the query
+-  Works with `select`, `insert` and `update` ORM functions
+-  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 <hr />
 
