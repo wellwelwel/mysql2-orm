@@ -7,9 +7,9 @@
    "types": "./index.d.ts",
    "typings": "./index.d.ts",
    "scripts": {
-      "prebuild": "rm -rf './dist' './types' './index.d.ts' './types.d.ts' './index.cjs' './index.mjs';",
+      "prebuild": "rm -rf './dist' './index.d.ts' './types.d.ts' './helpers' './index.cjs' './index.mjs';",
       "build": "npx tsc && npx rollup -c;",
-      "postbuild": "mv ./types/index.d.ts ./index.d.ts; mv ./types/types.d.ts ./types.d.ts; rm -rf './dist' './types';",
+      "postbuild": "rm -rf './dist';",
       "init": "npm i --ignore-scripts;",
       "init:update": "npm run init; npm run update;",
       "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
@@ -55,8 +55,7 @@
    "files": [
       "index.cjs",
       "index.mjs",
-      "index.d.ts",
-      "types.d.ts",
+      "**/**/*.d.ts",
       "samples"
    ],
    "exports": {

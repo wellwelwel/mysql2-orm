@@ -1,6 +1,7 @@
 import { Pool } from 'mysql2/promise';
+import setBacktick from './helpers/set-backtick';
 import { Credentials, SelectOptions, InsertOptions, UpdateOptions, QueryResults } from './types';
-export declare const MySQL: {
+declare const MySQL: {
     new (credentials: Credentials): {
         verbose: boolean;
         credentials: Credentials;
@@ -14,6 +15,6 @@ export declare const MySQL: {
         }>;
         getConnection(): Promise<false | import("mysql2/promise").PoolConnection>;
         end(): Promise<boolean>;
-        setBacktick(tableOrColumn: string): string;
     };
 };
+export { MySQL, setBacktick };

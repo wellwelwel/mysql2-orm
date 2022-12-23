@@ -22,7 +22,7 @@
       "sourceMap": false,
       "declaration": true,
 
-      "declarationDir": "types",
+      "declarationDir": "./",
       "outDir": "dist"
    }
 }

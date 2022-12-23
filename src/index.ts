@@ -1,6 +1,6 @@
 import { Pool, createPool } from 'mysql2/promise';
 import forceArray from './helpers/force-array';
-import backtick from './helpers/set-backtick';
+import setBacktick from './helpers/set-backtick';
 import {
    Credentials,
    SelectOptions,
@@ -13,7 +13,7 @@ import {
 } from './types';
 import { defaultOptions } from './options';
 
-export const MySQL = class MySQL {
+const MySQL = class {
    public verbose: boolean;
    public credentials: Credentials;
    public connection: Pool;
@@ -47,26 +47,26 @@ export const MySQL = class MySQL {
          const columns =
             typeof defaults.columns === 'string'
                ? defaults.columns
-               : defaults.columns.map((column) => backtick(column)).join(', ');
+               : defaults.columns.map((column) => setBacktick(column)).join(', ');
 
-         const table = backtick(defaults.table);
+         const table = setBacktick(defaults.table);
 
          const join = forceArray(defaults.join)
             .map((currentJoin) =>
                currentJoin?.on?.a && currentJoin?.on?.b
-                  ? ` ${currentJoin.type.toUpperCase()}${currentJoin?.outer ? ' OUTER' : ''} JOIN ${backtick(
+                  ? ` ${currentJoin.type.toUpperCase()}${currentJoin?.outer ? ' OUTER' : ''} JOIN ${setBacktick(
                        currentJoin.table
-                    )} ON ${backtick(currentJoin.on.a)} = ${backtick(currentJoin.on.b)}`
+                    )} ON ${setBacktick(currentJoin.on.a)} = ${setBacktick(currentJoin.on.b)}`
                   : ''
             )
             .join('');
 
          const where = defaults.where ? ` WHERE ${defaults.where}` : '';
 
-         const groupBy = defaults.groupBy ? ` GROUP BY ${backtick(defaults.groupBy)}` : '';
+         const groupBy = defaults.groupBy ? ` GROUP BY ${setBacktick(defaults.groupBy)}` : '';
 
          const orderBy = defaults.orderBy[0]
-            ? ` ORDER BY ${backtick(defaults.orderBy[0])} ${defaults?.orderBy[1] || 'ASC'}`
+            ? ` ORDER BY ${setBacktick(defaults.orderBy[0])} ${defaults?.orderBy[1] || 'ASC'}`
             : '';
 
          const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
@@ -114,12 +114,12 @@ export const MySQL = class MySQL {
             set.values.push(`(${bindValues.join(', ')})`);
 
             for (const column in insertion) {
-               !set.columns.includes(backtick(column)) && set.columns.push(backtick(column));
+               !set.columns.includes(setBacktick(column)) && set.columns.push(setBacktick(column));
                set.params.push(insertion[column]);
             }
          });
 
-         const table = backtick(defaults.table);
+         const table = setBacktick(defaults.table);
          const columns = set.columns.join(', ');
          const values = set.values.join(', ');
          const { params } = set;
@@ -153,11 +153,11 @@ export const MySQL = class MySQL {
          };
 
          for (const column in defaults.set) {
-            set.columns.push(`${backtick(column)} = ?`);
+            set.columns.push(`${setBacktick(column)} = ?`);
             set.params.push(defaults.set[column]);
          }
 
-         const table = backtick(defaults.table);
+         const table = setBacktick(defaults.table);
          const where = defaults.where ? ` WHERE ${defaults.where}` : '';
          const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
          const params = [...set.params, ...defaults.params];
@@ -205,8 +205,6 @@ export const MySQL = class MySQL {
          return false;
       }
    }
-
-   setBacktick(tableOrColumn: string) {
-      return backtick(tableOrColumn);
-   }
 };
+
+export { MySQL, setBacktick };

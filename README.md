@@ -16,13 +16,20 @@
 -  ES Modules
 
 ```javascript
-import MySQL from 'mysql2-orm';
+import { MySQL } from 'mysql2-orm';
 ```
 
 -  CommonJS
 
 ```javascript
-const MySQL = require('mysql2-orm');
+const { MySQL } = require('mysql2-orm');
+```
+
+-  TypeScript
+
+```javascript
+import { MySQL } from 'mysql2-orm';
+import { ... } from 'mysql2-orm/types';
 ```
 
 #### Connect
@@ -35,8 +42,6 @@ const mysql = new MySQL({
    password: 'pass',
    database: 'dbname',
 });
-
-await mysql.connect();
 ```
 
 #### Mount Query Only
@@ -275,14 +280,15 @@ await mysql.end();
 
 ### Others
 
-#### Backtick
+#### Backticks
 
+<!-- prettier-ignore -->
 ```javascript
-const { setBacktick } = mysql;
+import { setBacktick } from 'mysql2-orm';
 
-setBacktick('table'); // `table`
-setBacktick('column'); // `column`
-setBacktick('table.column'); // `table`.`column`
+setBacktick('table');         // `table`
+setBacktick('column');        // `column`
+setBacktick('table.column');  // `table`.`column`
 ```
 
 <hr />

@@ -779,13 +779,9 @@ var MySQL = /*#__PURE__*/function () {
       }
       return end;
     }()
-  }, {
-    key: "setBacktick",
-    value: function setBacktick$1(tableOrColumn) {
-      return setBacktick(tableOrColumn);
-    }
   }]);
   return MySQL;
 }();
 
 exports.MySQL = MySQL;
+exports.setBacktick = setBacktick;
