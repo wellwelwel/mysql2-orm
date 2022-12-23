@@ -1,19 +1,22 @@
-import commonjs from '@rollup/plugin-commonjs';
-import { getBabelOutputPlugin } from '@rollup/plugin-babel';
+import { babel } from '@rollup/plugin-babel';
 
 export default {
-   input: 'src/index.js',
-   output: {
-      file: './lib/index.cjs',
-      format: 'cjs',
-   },
-
+   input: 'dist/index.js',
    external: ['mysql2/promise'],
    plugins: [
-      commonjs(),
-      getBabelOutputPlugin({
+      babel({
+         babelHelpers: 'bundled',
          presets: ['@babel/preset-env'],
-         compact: true,
       }),
+   ],
+   output: [
+      {
+         file: './index.cjs',
+         format: 'cjs',
+      },
+      {
+         file: './index.mjs',
+         format: 'es',
+      },
    ],
 };

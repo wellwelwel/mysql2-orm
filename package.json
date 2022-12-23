@@ -1,10 +1,15 @@
 {
    "name": "mysql2-orm",
-   "main": "./lib/index.cjs",
-   "version": "1.3.2",
    "type": "module",
+   "version": "2.0.0-next.1",
+   "main": "./index.cjs",
+   "module": "./index.mjs",
+   "types": "./index.d.ts",
+   "typings": "./index.d.ts",
    "scripts": {
-      "build": "rm -rf './lib/'; npx rollup -c;",
+      "prebuild": "rm -rf './dist' './index.d.ts' './types.d.ts' './helpers' './index.cjs' './index.mjs';",
+      "build": "npx tsc && npx rollup -c;",
+      "postbuild": "rm -rf './dist';",
       "init": "npm i --ignore-scripts;",
       "init:update": "npm run init; npm run update;",
       "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
@@ -12,13 +17,17 @@
       "update:minor": "npm run update; npm run build; npm version minor --no-git-tag-version;",
       "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;"
    },
+   "dependencies": {
+      "mysql2": "^2.3.3"
+   },
    "devDependencies": {
       "@babel/preset-env": "^7.20.2",
       "@rollup/plugin-babel": "^6.0.3",
-      "@rollup/plugin-commonjs": "^24.0.0",
+      "@types/node": "^18.11.17",
       "packages-update": "^1.2.1",
       "prettier": "^2.8.1",
-      "rollup": "^3.7.5"
+      "rollup": "^3.8.1",
+      "typescript": "^4.9.4"
    },
    "license": "MIT",
    "repository": {
@@ -31,7 +40,9 @@
       "orm",
       "extend",
       "extends",
-      "extender"
+      "extender",
+      "client",
+      "server"
    ],
    "author": "https://github.com/wellwelwel",
    "bugs": {
@@ -43,7 +54,19 @@
       "node": ">=14.18.0 || >=16.0.0",
       "npm": ">=7.0.2"
    },
-   "dependencies": {
-      "mysql2": "^2.3.3"
+   "files": [
+      "index.cjs",
+      "index.mjs",
+      "index.d.ts",
+      "types.d.ts",
+      "helpers",
+      "samples"
+   ],
+   "exports": {
+      ".": {
+         "require": "./index.cjs",
+         "import": "./index.mjs"
+      },
+      "./types": "./types.d.ts"
    }
 }

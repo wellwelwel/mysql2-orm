@@ -3,4 +3,4 @@ dist
 docker/app
 docker/backup
 lib
-# tests
+*.d.ts

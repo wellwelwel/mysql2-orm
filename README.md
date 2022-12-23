@@ -15,15 +15,26 @@
 
 -  ES Modules
 
-```javascript
-import MySQL from 'mysql2-orm';
-```
+   ```javascript
+   import { MySQL } from 'mysql2-orm';
+   ```
 
 -  CommonJS
 
-```javascript
-const MySQL = require('mysql2-orm');
-```
+   ```javascript
+   const { MySQL } = require('mysql2-orm');
+   ```
+
+-  TypeScript
+
+   ```javascript
+   import { MySQL } from 'mysql2-orm';
+   import { ... } from 'mysql2-orm/types';
+   ```
+
+   -  You will need to install `@types/node`
+
+<hr />
 
 #### Connect
 
@@ -35,22 +46,7 @@ const mysql = new MySQL({
    password: 'pass',
    database: 'dbname',
 });
-
-await mysql.connect();
 ```
-
-#### Mount Query Only
-
-```javascript
-await mysql.select({
-   // ...,
-   mountOnly: true,
-});
-```
-
--  Returns an object with the final `query` and `params`, without execute the query
--  Works with `select`, `insert` and `update` ORM functions
--  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 #### Close Connection
 
@@ -228,6 +224,21 @@ await mysql.end();
 
 <hr />
 
+#### Mount Query Only
+
+```javascript
+await mysql.select({
+   // ...
+   mountOnly: true,
+});
+```
+
+-  Returns an object with the final `query` and `params`, without execute the query
+-  Works with `select`, `insert` and `update` ORM functions
+-  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
+
+<hr />
+
 #### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
 
 -  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
@@ -275,14 +286,15 @@ await mysql.end();
 
 ### Others
 
-#### Backtick
+#### Backticks
 
+<!-- prettier-ignore -->
 ```javascript
-const { setBacktick } = mysql;
+import { setBacktick } from 'mysql2-orm';
 
-setBacktick('table'); // `table`
-setBacktick('column'); // `column`
-setBacktick('table.column'); // `table`.`column`
+setBacktick('table');         // `table`
+setBacktick('column');        // `column`
+setBacktick('table.column');  // `table`.`column`
 ```
 
 <hr />

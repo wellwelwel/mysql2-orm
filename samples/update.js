@@ -1,37 +1,35 @@
-import MySQL from '../src/index.js';
+import { MySQL } from '../index.mjs';
 
-(async () => {
-   const mysql = new MySQL({
-      host: '127.0.0.1',
-      port: 3306,
-      user: 'root',
-      password: '*',
-      database: 'mydb',
+const mysql = new MySQL({
+   host: '127.0.0.1',
+   port: 3306,
+   user: 'root',
+   password: '*',
+   database: 'mydb',
+});
+
+mysql.verbose = true;
+
+// Example
+{
+   /**
+    * QUERY: "UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;"
+    * PARAMS: [ 'Squirtle', 'water', 2 ]
+    *
+    * Returns the number of affectedRows
+    */
+   const affectedRows = await mysql.update({
+      table: 'pokemons',
+      set: {
+         name: 'Squirtle',
+         type: 'water',
+      },
+      where: '`id` = ?',
+      params: [2],
+      limit: 1,
    });
 
-   mysql.verbose = true;
+   console.log(affectedRows);
+}
 
-   // Example
-   {
-      /**
-       * QUERY: "UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;"
-       * PARAMS: [ 'Squirtle', 'water', 2 ]
-       *
-       * Returns the number of affectedRows
-       */
-      const affectedRows = await mysql.update({
-         table: 'pokemons',
-         set: {
-            name: 'Squirtle',
-            type: 'water',
-         },
-         where: '`id` = ?',
-         params: [2],
-         limit: 1,
-      });
-
-      console.log(affectedRows);
-   }
-
-   await mysql.end();
-})();
+await mysql.end();
