@@ -1,4 +1,4 @@
-import { MySQL } from '../lib/index.mjs';
+import { MySQL, setBacktick as backtick } from '../index.mjs';
 
 const mysql = new MySQL({
    host: '127.0.0.1',
@@ -8,7 +8,6 @@ const mysql = new MySQL({
    database: 'mydb',
 });
 
-const { setBacktick: backtick } = mysql;
 const mysql2 = await mysql.getConnection();
 
 mysql.verbose = true;

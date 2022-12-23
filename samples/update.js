@@ -1,4 +1,4 @@
-import { MySQL } from '../lib/index.mjs';
+import { MySQL } from '../index.mjs';
 
 const mysql = new MySQL({
    host: '127.0.0.1',
