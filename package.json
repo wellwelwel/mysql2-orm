@@ -1,7 +1,7 @@
 {
    "name": "mysql2-orm",
    "type": "module",
-   "version": "2.0.0-next.1",
+   "version": "2.0.0",
    "main": "./index.cjs",
    "module": "./index.mjs",
    "types": "./index.d.ts",
