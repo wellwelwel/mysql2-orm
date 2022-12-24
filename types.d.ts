@@ -1,4 +1,3 @@
-import { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 export type Params = string | number | boolean | null;
 export type SetValues = {
     [column: string]: Params;
@@ -11,10 +10,38 @@ export type JoinOptions = {
     };
     outer?: boolean;
 };
-export type QueryResults = RowDataPacket | RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[] | ResultSetHeader | false | {
+export type MountOnly = {
     query: string;
     params: Params[];
 };
+export type Row = {
+    [name: string]: Params;
+};
+export interface SelectQuery extends SelectOptions {
+    mountOnly: true;
+}
+export interface SelectFirstRow extends SelectOptions {
+    limit: 1;
+}
+export interface SelectDefaultQuery extends SelectOptions {
+    limit?: number;
+    mountOnly?: false;
+}
+export interface InsertQuery extends InsertOptions {
+    mountOnly: true;
+}
+export interface InsertRowId extends InsertOptions {
+    values: Row;
+}
+export interface InsertFirstRowId extends InsertOptions {
+    values: Row[];
+}
+export interface UpdateQuery extends UpdateOptions {
+    mountOnly: true;
+}
+export interface UpdateAffectedRows extends UpdateOptions {
+    set: Row;
+}
 export interface Credentials {
     host: string;
     port?: number;
@@ -46,7 +73,6 @@ export interface SelectOptions {
 }
 export interface InsertOptions {
     table: string;
-    columns: string[];
     values: SetValues | SetValues[];
     mountOnly?: boolean;
 }

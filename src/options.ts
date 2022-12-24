@@ -22,7 +22,6 @@ export const defaultOptions = {
    },
    insert: {
       table: '',
-      columns: [],
       values: [],
       mountOnly: false,
    },
