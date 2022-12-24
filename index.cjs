@@ -501,7 +501,6 @@ var defaultOptions = {
   },
   insert: {
     table: '',
-    columns: [],
     values: [],
     mountOnly: false
   },
@@ -671,7 +670,7 @@ var MySQL = /*#__PURE__*/function () {
     key: "update",
     value: function () {
       var _update = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(options) {
-        var defaults, set, column, table, where, limit, params, query, _yield$this$connectio5, _yield$this$connectio6, results, result;
+        var defaults, set, column, table, where, limit, params, query, _yield$this$connectio5, _yield$this$connectio6, results;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
@@ -707,18 +706,17 @@ var MySQL = /*#__PURE__*/function () {
               _yield$this$connectio5 = _context3.sent;
               _yield$this$connectio6 = _slicedToArray(_yield$this$connectio5, 1);
               results = _yield$this$connectio6[0];
-              result = (results === null || results === void 0 ? void 0 : results['affectedRows']) || false;
-              return _context3.abrupt("return", result);
-            case 22:
-              _context3.prev = 22;
+              return _context3.abrupt("return", (results === null || results === void 0 ? void 0 : results['affectedRows']) || false);
+            case 21:
+              _context3.prev = 21;
               _context3.t0 = _context3["catch"](0);
               this.verbose && console.error(_context3.t0);
               return _context3.abrupt("return", false);
-            case 26:
+            case 25:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, this, [[0, 22]]);
+        }, _callee3, this, [[0, 21]]);
       }));
       function update(_x3) {
         return _update.apply(this, arguments);

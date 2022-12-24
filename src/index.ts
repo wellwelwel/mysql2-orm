@@ -9,7 +9,16 @@ import {
    InsertSet,
    UpdateSet,
    SetValues,
-   QueryResults,
+   Row,
+   MountOnly,
+   SelectQuery,
+   SelectFirstRow,
+   SelectDefaultQuery,
+   InsertQuery,
+   InsertFirstRowId,
+   InsertRowId,
+   UpdateQuery,
+   UpdateAffectedRows,
 } from './types';
 import { defaultOptions } from './options';
 
@@ -35,7 +44,10 @@ const MySQL = class {
       }
    }
 
-   async select(options: SelectOptions): Promise<QueryResults> {
+   async select(options: SelectQuery): Promise<MountOnly>;
+   async select(options: SelectFirstRow): Promise<Row | false>;
+   async select(options: SelectDefaultQuery): Promise<Row[] | false>;
+   async select(options: SelectOptions): Promise<Row[] | Row | MountOnly | false> {
       try {
          this.connect();
 
@@ -88,14 +100,17 @@ const MySQL = class {
 
          if (defaults.limit === 1) return rows[0 as keyof typeof rows] || false;
 
-         return rows || false;
+         return (rows as Row[]) || false;
       } catch (error) {
          this.verbose && console.error(error);
          return false;
       }
    }
 
-   async insert(options: InsertOptions): Promise<QueryResults> {
+   async insert(options: InsertQuery): Promise<MountOnly>;
+   async insert(options: InsertRowId): Promise<number | false>;
+   async insert(options: InsertFirstRowId): Promise<number | false>;
+   async insert(options: InsertOptions): Promise<number | false | MountOnly> {
       try {
          this.connect();
 
@@ -135,6 +150,7 @@ const MySQL = class {
          this.verbose && console.log(query, params);
 
          const [results] = await this.connection.execute(query, params);
+
          return results?.['insertId' as keyof typeof results] || false;
       } catch (error) {
          this.verbose && console.error(error);
@@ -142,7 +158,9 @@ const MySQL = class {
       }
    }
 
-   async update(options: UpdateOptions) {
+   async update(options: UpdateQuery): Promise<MountOnly>;
+   async update(options: UpdateAffectedRows): Promise<number | false>;
+   async update(options: UpdateOptions): Promise<number | false | MountOnly> {
       try {
          this.connect();
 
@@ -173,9 +191,8 @@ const MySQL = class {
          this.verbose && console.log(query, params);
 
          const [results] = await this.connection.execute(query, params);
-         const result: QueryResults = results?.['affectedRows' as keyof typeof results] || false;
 
-         return result;
+         return results?.['affectedRows' as keyof typeof results] || false;
       } catch (error) {
          this.verbose && console.error(error);
          return false;

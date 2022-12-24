@@ -32,7 +32,7 @@
    import { ... } from 'mysql2-orm/types';
    ```
 
-   -  You will need to install `@types/node`
+   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
 
 <hr />
 

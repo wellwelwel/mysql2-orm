@@ -21,7 +21,6 @@ export declare const defaultOptions: {
     };
     insert: {
         table: string;
-        columns: never[];
         values: never[];
         mountOnly: boolean;
     };
