@@ -1,6 +1,6 @@
 import { Pool, createPool } from 'mysql2/promise';
-import forceArray from './helpers/force-array';
-import setBacktick from './helpers/set-backtick';
+import forceArray from './helpers/force-array.js';
+import setBacktick from './helpers/set-backtick.js';
 import {
    Credentials,
    SelectOptions,
@@ -19,8 +19,8 @@ import {
    InsertRowId,
    UpdateQuery,
    UpdateAffectedRows,
-} from './types';
-import { defaultOptions } from './options';
+} from './types.js';
+import { defaultOptions } from './options.js';
 
 const MySQL = class {
    public verbose: boolean;

@@ -1,6 +1,6 @@
 import { Pool } from 'mysql2/promise';
-import setBacktick from './helpers/set-backtick';
-import { Credentials, Row, MountOnly, SelectQuery, SelectFirstRow, SelectDefaultQuery, InsertQuery, InsertFirstRowId, InsertRowId, UpdateQuery, UpdateAffectedRows } from './types';
+import setBacktick from './helpers/set-backtick.js';
+import { Credentials, Row, MountOnly, SelectQuery, SelectFirstRow, SelectDefaultQuery, InsertQuery, InsertFirstRowId, InsertRowId, UpdateQuery, UpdateAffectedRows } from './types.js';
 declare const MySQL: {
     new (credentials: Credentials): {
         verbose: boolean;
