@@ -142,7 +142,6 @@ await mysql.end();
    ```
 
    -  The **`join` option** accetps a direct `object` or an `array` with multiple `JOIN`
-   -  ⚠️ When using `join` with dynamic params, remeber that `JOIN` comes before the `WHERE`
 
 <br />
 
