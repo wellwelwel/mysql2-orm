@@ -4,6 +4,7 @@ export type SetValues = { [column: string]: Params };
 
 export type JoinOptions = {
    type: 'left' | 'right' | 'inner' | 'cross';
+   table: string;
    on: {
       a: string;
       b: string;
