@@ -1,4 +1,4 @@
-export type Params = string | number | boolean | null;
+export type Params = string | number | boolean | Date | null | Blob;
 
 export type SetValues = { [column: string]: Params };
 
