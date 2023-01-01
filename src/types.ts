@@ -82,7 +82,7 @@ export interface SelectOptions {
    limit?: number;
    offset?: number;
    groupBy?: string;
-   orderBy?: [string, 'ASC' | 'DESC' | undefined];
+   orderBy?: [string] | [string, 'ASC' | 'DESC'];
    params?: Params[];
    mountOnly?: boolean;
 }
