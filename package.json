@@ -1,15 +1,10 @@
 {
    "name": "mysql2-orm",
-   "type": "module",
    "version": "2.0.4",
-   "main": "./index.cjs",
-   "module": "./index.mjs",
-   "types": "./index.d.ts",
-   "typings": "./index.d.ts",
+   "main": "./lib/index.js",
    "scripts": {
-      "prebuild": "rm -rf './dist' './index.d.ts' './types.d.ts' './helpers' './index.cjs' './index.mjs';",
-      "build": "npx tsc && npx rollup -c;",
-      "postbuild": "rm -rf './dist';",
+      "prebuild": "rm -rf './lib';",
+      "build": "npx tsc;",
       "init": "npm i --ignore-scripts;",
       "init:update": "npm run init; npm run update;",
       "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
@@ -21,12 +16,9 @@
       "mysql2": "^3.2.0"
    },
    "devDependencies": {
-      "@babel/preset-env": "^7.21.4",
-      "@rollup/plugin-babel": "^6.0.3",
       "@types/node": "^18.15.11",
       "packages-update": "^1.2.1",
       "prettier": "^2.8.7",
-      "rollup": "^3.20.2",
       "typescript": "^5.0.3"
    },
    "license": "MIT",
@@ -55,19 +47,6 @@
       "npm": ">=7.0.2"
    },
    "files": [
-      "index.cjs",
-      "index.mjs",
-      "index.d.ts",
-      "types.d.ts",
-      "helpers",
-      "samples"
-   ],
-   "exports": {
-      ".": {
-         "types": "./index.d.ts",
-         "require": "./index.cjs",
-         "import": "./index.mjs"
-      },
-      "./types": "./types.d.ts"
-   }
+      "lib"
+   ]
 }

@@ -2,9 +2,9 @@
    "include": ["src"],
    "exclude": ["node_modules"],
    "compilerOptions": {
-      "target": "ESNext",
-      "module": "ESNext",
-      "moduleResolution": "NodeNext",
+      "target": "ES2016",
+      "module": "CommonJS",
+      "moduleResolution": "Node",
 
       "resolveJsonModule": true,
       "isolatedModules": true,
@@ -24,7 +24,7 @@
 
       "skipLibCheck": true,
 
-      "declarationDir": "./",
-      "outDir": "dist"
+      "declarationDir": "lib",
+      "outDir": "lib"
    }
 }
