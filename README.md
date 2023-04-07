@@ -92,6 +92,7 @@ await mysql.end();
 
    ```sql
    SELECT `name`, `type` FROM `pokemons` WHERE type IN(?, ?) ORDER BY `name` DESC LIMIT 2;
+
    -- params: [ 'water', 'grass' ]
    ```
 
@@ -135,10 +136,11 @@ await mysql.end();
 
    ```sql
    SELECT `pokemons`.`name`, `pokemons`.`type`
-   FROM `captureds`
-   LEFT JOIN `pokemons`
-   ON `captureds`.`pokemonId` = `pokemons`.`id`
-   WHERE `userId` = ?;
+      FROM `captureds`
+      LEFT JOIN `pokemons`
+         ON `captureds`.`pokemonId` = `pokemons`.`id`
+      WHERE `userId` = ?;
+
    -- params: [ 1 ]
    ```
 
@@ -170,6 +172,7 @@ await mysql.end();
 
    ```sql
    INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
+
    -- params: [ 'Mew', 'psychic' ]
    ```
 
@@ -189,6 +192,7 @@ await mysql.end();
 
    ```sql
    INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
+
    -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
    ```
 
@@ -215,6 +219,7 @@ await mysql.end();
 
    ```sql
    UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE id = ? LIMIT 1;
+
    -- params: [ 'Squirtle', 'water', 2 ]
    ```
 
@@ -241,6 +246,7 @@ await mysql.end();
 
    ```sql
    DELETE FROM `pokemons` WHERE id = ? LIMIT 1;
+
    -- params: [ 2 ]
    ```
 
