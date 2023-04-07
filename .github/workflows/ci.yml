@@ -13,14 +13,13 @@ jobs:
 
       - name: ➕ Actions - Setup NodeJS
         uses: actions/setup-node@v3
-        with:
-          node-version: '19.x'
-
       - name: Build MySQL Container Container
-        uses: docker/compose@latest
+        run: docker-compose -f ./.github/workflows/docker/docker-compose.yml up -d
         with:
           compose-file: './docker/docker-compose.yml'
           command: up -d
+              with:
+          node-version: '19.x'
 
       - name: 📦 Installing Dependencies
         run: npm run init && npm i typescript @types/node -D
