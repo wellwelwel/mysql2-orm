@@ -16,16 +16,16 @@ jobs:
         with:
           node-version: '19.x'
 
-      - name: 🐳 Build MySQL Container Container
+      - name: 🐳 Building MySQL Container Container
         run: docker-compose -f ./.github/workflows/docker/docker-compose.yml up -d
 
       - name: 📦 Installing Dependencies
         run: npm run init && npm i typescript @types/node -D
 
-      - name: 🤹🏻‍♀️ Build Project
+      - name: 🤹🏻‍♀️ Building the Project
         run: npm run build
 
-      - name: 🤹🏻‍♀️ Build Tests
+      - name: 🤹🏻‍♀️ Building Tests
         run: npm run test:build
 
       - name: 🧪 Testing Services - Insert
@@ -40,5 +40,5 @@ jobs:
       - name: 🧪 Testing Services - Select
         run: npm run test:select
 
-      - name: 🧪 Testing Services - Original Conection
+      - name: 🧪 Testing Services - Original Connection
         run: npm run test:original
