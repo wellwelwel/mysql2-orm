@@ -139,7 +139,8 @@ await mysql.end();
       FROM `captureds`
       LEFT JOIN `pokemons`
          ON `captureds`.`pokemonId` = `pokemons`.`id`
-      WHERE `userId` = ?;
+      WHERE userId = ?
+   ;
 
    -- params: [ 1 ]
    ```
