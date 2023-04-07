@@ -268,7 +268,7 @@ await mysql.select({
 
 -  Returns an object with the final `query` and `params`, without execute the query
 -  Works with `select`, `insert` and `update` ORM functions
--  This is very useful for [subqueries](./samples/subqueries.js) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
+-  This is very useful for [subqueries](./samples/subqueries.ts) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 <hr />
 
@@ -338,7 +338,7 @@ setBacktick('table.column');  // `table`.`column`
 -  Use `verbose` to see final queries in console
 
 -  -  [x] Features
-      -  [x] [`SELECT`](./samples/select.js)
+      -  [x] [`SELECT`](./samples/select.ts)
          -  [x] DISTINCT
          -  [x] JOIN
          -  [x] WHERE
@@ -346,15 +346,15 @@ setBacktick('table.column');  // `table`.`column`
          -  [x] ORDER BY
          -  [x] LIMIT
          -  [x] OFFSET
-      -  [x] [`UPDATE`](./samples/update.js)
+      -  [x] [`UPDATE`](./samples/update.ts)
          -  [x] WHERE
          -  [x] LIMIT
-      -  [x] [`DELETE`](./samples/delete.js)
+      -  [x] [`DELETE`](./samples/delete.ts)
          -  [x] WHERE
          -  [x] LIMIT
-      -  [x] [`INSERT`](./samples/insert.js)
-      -  [x] [`TRANSACTION`](./samples/transaction.js)
-      -  [x] [`SUBQUERIES`](./samples/subqueries.js)
+      -  [x] [`INSERT`](./samples/insert.ts)
+      -  [x] [`TRANSACTION`](./samples/transaction.ts)
+      -  [x] [`SUBQUERIES`](./samples/subqueries.ts)
 
 <hr />
 
