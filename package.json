@@ -10,7 +10,15 @@
       "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
       "update:patch": "npm run update; npm run build; npm version patch --no-git-tag-version;",
       "update:minor": "npm run update; npm run build; npm version minor --no-git-tag-version;",
-      "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;"
+      "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;",
+      "test:docker": "cd './.github/workflow/docker' && docker compose -p pokemons down; docker compose -p pokemons up -d",
+      "pretest:build": "cd './.github/workflow/tests' && rm -rf ./lib;",
+      "test:build": "cd './.github/workflow/tests' && tsc -p ./tsconfig.json;",
+      "test:insert": "cd './.github/workflow/tests' && node lib/insert;",
+      "test:delete": "cd './.github/workflow/tests' && node lib/delete;",
+      "test:update": "cd './.github/workflow/tests' && node lib/update;",
+      "test:select": "cd './.github/workflow/tests' && node lib/select;",
+      "test:original": "cd './.github/workflow/tests' && node lib/get-connection;"
    },
    "dependencies": {
       "mysql2": "^3.2.0"
