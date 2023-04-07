@@ -341,6 +341,9 @@ setBacktick('table.column');  // `table`.`column`
       -  [x] [`UPDATE`](./samples/update.js)
          -  [x] WHERE
          -  [x] LIMIT
+      -  [x] [`DELETE`](./samples/delete.js)
+         -  [x] WHERE
+         -  [x] LIMIT
       -  [x] [`INSERT`](./samples/insert.js)
       -  [x] [`TRANSACTION`](./samples/transaction.js)
       -  [x] [`SUBQUERIES`](./samples/subqueries.js)
