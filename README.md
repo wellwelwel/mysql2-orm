@@ -32,7 +32,8 @@
    import { ... } from 'mysql2-orm/lib/types';
    ```
 
-   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node) as developer dependencie
+   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
+      -  `npm i @types/node -D`
 
 <hr />
 
