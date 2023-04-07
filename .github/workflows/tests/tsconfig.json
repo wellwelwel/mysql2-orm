@@ -1,0 +1,24 @@
+{
+   "include": ["src"],
+   "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "nodenext",
+
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+
+      "allowJs": false,
+      "strict": true,
+      "alwaysStrict": true,
+      "strictFunctionTypes": false,
+      "noUnusedLocals": true,
+      "noImplicitAny": true,
+
+      "skipLibCheck": true,
+
+      "outDir": "lib"
+   }
+}
