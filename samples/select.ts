@@ -1,8 +1,8 @@
-import { MySQL } from '../index.mjs';
+import { MySQL } from '../lib/index.js';
 
 const mysql = new MySQL({
    host: '127.0.0.1',
-   port: '3306',
+   port: 3306,
    user: 'root',
    password: '*',
    database: 'mydb',

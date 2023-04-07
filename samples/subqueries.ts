@@ -1,4 +1,4 @@
-import { MySQL, setBacktick as backtick } from '../index.mjs';
+import { MySQL, setBacktick as backtick } from '../lib/index.js';
 
 const mysql = new MySQL({
    host: '127.0.0.1',
