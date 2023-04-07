@@ -12,13 +12,13 @@
       "update:minor": "npm run update; npm run build; npm version minor --no-git-tag-version;",
       "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;",
       "test:docker": "cd './.github/workflows/docker' && docker compose -p pokemons down; docker compose -p pokemons up -d",
-      "pretest:build": "cd './.github/workflows/tests' && rm -rf ./lib;",
-      "test:build": "cd './.github/workflows/tests' && tsc -p ./tsconfig.json;",
-      "test:insert": "cd './.github/workflows/tests' && node lib/insert;",
-      "test:delete": "cd './.github/workflows/tests' && node lib/delete;",
-      "test:update": "cd './.github/workflows/tests' && node lib/update;",
-      "test:select": "cd './.github/workflows/tests' && node lib/select;",
-      "test:original": "cd './.github/workflows/tests' && node lib/get-connection;"
+      "pretest:build": "cd ./.github/workflows/tests && rm -rf ./lib;",
+      "test:build": "cd ./.github/workflows/tests && tsc -p ./tsconfig.json;",
+      "test:insert": "cd ./.github/workflows/tests && node lib/insert;",
+      "test:delete": "cd ./.github/workflows/tests && node lib/delete;",
+      "test:update": "cd ./.github/workflows/tests && node lib/update;",
+      "test:select": "cd ./.github/workflows/tests && node lib/select;",
+      "test:original": "cd ./.github/workflows/tests && node lib/get-connection;"
    },
    "dependencies": {
       "mysql2": "^3.2.0"
