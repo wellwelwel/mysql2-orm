@@ -234,15 +234,9 @@ const MySQL = class {
    }
 
    async getConnection() {
-      try {
-         this.connect();
+      this.connect();
 
-         return this.connection.getConnection() || false;
-      } catch (error) {
-         this.verbose && console.error(error);
-
-         return false;
-      }
+      return await this.connection.getConnection();
    }
 
    async end() {

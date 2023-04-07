@@ -17,7 +17,7 @@ declare const MySQL: {
         update(options: UpdateAffectedRows): Promise<number | false>;
         delete(options: DeleteQuery): Promise<MountOnly>;
         delete(options: DeleteOptions): Promise<number | false>;
-        getConnection(): Promise<false | import("mysql2/promise").PoolConnection>;
+        getConnection(): Promise<import("mysql2/promise").PoolConnection>;
         end(): Promise<boolean>;
     };
 };

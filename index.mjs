@@ -784,19 +784,16 @@ var MySQL = /*#__PURE__*/function () {
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.prev = 0;
               this.connect();
-              return _context5.abrupt("return", this.connection.getConnection() || false);
-            case 5:
-              _context5.prev = 5;
-              _context5.t0 = _context5["catch"](0);
-              this.verbose && console.error(_context5.t0);
-              return _context5.abrupt("return", false);
-            case 9:
+              _context5.next = 3;
+              return this.connection.getConnection();
+            case 3:
+              return _context5.abrupt("return", _context5.sent);
+            case 4:
             case "end":
               return _context5.stop();
           }
-        }, _callee5, this, [[0, 5]]);
+        }, _callee5, this);
       }));
       function getConnection() {
         return _getConnection.apply(this, arguments);
