@@ -33,4 +33,11 @@ export const defaultOptions = {
       params: [],
       mountOnly: false,
    },
+   delete: {
+      table: '',
+      where: null,
+      limit: null,
+      params: [],
+      mountOnly: false,
+   },
 };

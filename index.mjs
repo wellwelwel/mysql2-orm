@@ -509,6 +509,13 @@ var defaultOptions = {
     limit: null,
     params: [],
     mountOnly: false
+  },
+  "delete": {
+    table: '',
+    where: null,
+    limit: null,
+    params: [],
+    mountOnly: false
   }
 };
 
@@ -704,7 +711,7 @@ var MySQL = /*#__PURE__*/function () {
               _yield$this$connectio5 = _context3.sent;
               _yield$this$connectio6 = _slicedToArray(_yield$this$connectio5, 1);
               results = _yield$this$connectio6[0];
-              return _context3.abrupt("return", (results === null || results === void 0 ? void 0 : results['affectedRows']) || false);
+              return _context3.abrupt("return", (results === null || results === void 0 ? void 0 : results['affectedRows']) || 0);
             case 21:
               _context3.prev = 21;
               _context3.t0 = _context3["catch"](0);
@@ -722,25 +729,74 @@ var MySQL = /*#__PURE__*/function () {
       return update;
     }()
   }, {
-    key: "getConnection",
+    key: "delete",
     value: function () {
-      var _getConnection = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var _delete2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(options) {
+        var defaults, table, where, limit, params, query, _yield$this$connectio7, _yield$this$connectio8, results;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
               this.connect();
-              return _context4.abrupt("return", this.connection.getConnection() || false);
-            case 5:
-              _context4.prev = 5;
+              defaults = _objectSpread2(_objectSpread2({}, defaultOptions["delete"]), options);
+              table = setBacktick(defaults.table);
+              where = defaults.where ? " WHERE ".concat(defaults.where) : '';
+              limit = defaults.limit ? " LIMIT ".concat(defaults.limit) : '';
+              params = defaults.params;
+              query = "DELETE FROM ".concat(table).concat(where).concat(limit, ";");
+              if (!defaults.mountOnly) {
+                _context4.next = 10;
+                break;
+              }
+              return _context4.abrupt("return", {
+                query: query,
+                params: params
+              });
+            case 10:
+              this.verbose && console.log(query, params);
+              _context4.next = 13;
+              return this.connection.execute(query, params);
+            case 13:
+              _yield$this$connectio7 = _context4.sent;
+              _yield$this$connectio8 = _slicedToArray(_yield$this$connectio7, 1);
+              results = _yield$this$connectio8[0];
+              return _context4.abrupt("return", (results === null || results === void 0 ? void 0 : results['affectedRows']) || 0);
+            case 19:
+              _context4.prev = 19;
               _context4.t0 = _context4["catch"](0);
               this.verbose && console.error(_context4.t0);
               return _context4.abrupt("return", false);
-            case 9:
+            case 23:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, this, [[0, 5]]);
+        }, _callee4, this, [[0, 19]]);
+      }));
+      function _delete(_x4) {
+        return _delete2.apply(this, arguments);
+      }
+      return _delete;
+    }()
+  }, {
+    key: "getConnection",
+    value: function () {
+      var _getConnection = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              this.connect();
+              return _context5.abrupt("return", this.connection.getConnection() || false);
+            case 5:
+              _context5.prev = 5;
+              _context5.t0 = _context5["catch"](0);
+              this.verbose && console.error(_context5.t0);
+              return _context5.abrupt("return", false);
+            case 9:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, this, [[0, 5]]);
       }));
       function getConnection() {
         return _getConnection.apply(this, arguments);
@@ -750,25 +806,25 @@ var MySQL = /*#__PURE__*/function () {
   }, {
     key: "end",
     value: function () {
-      var _end = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+      var _end = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
-              _context5.next = 3;
+              _context6.prev = 0;
+              _context6.next = 3;
               return this.connection.end();
             case 3:
-              return _context5.abrupt("return", true);
+              return _context6.abrupt("return", true);
             case 6:
-              _context5.prev = 6;
-              _context5.t0 = _context5["catch"](0);
-              this.verbose && console.error(_context5.t0);
-              return _context5.abrupt("return", false);
+              _context6.prev = 6;
+              _context6.t0 = _context6["catch"](0);
+              this.verbose && console.error(_context6.t0);
+              return _context6.abrupt("return", false);
             case 10:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, this, [[0, 6]]);
+        }, _callee6, this, [[0, 6]]);
       }));
       function end() {
         return _end.apply(this, arguments);

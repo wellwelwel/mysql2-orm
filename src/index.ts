@@ -19,6 +19,8 @@ import {
    InsertRowId,
    UpdateQuery,
    UpdateAffectedRows,
+   DeleteOptions,
+   DeleteQuery,
 } from './types.js';
 import { defaultOptions } from './options.js';
 
@@ -192,7 +194,39 @@ const MySQL = class {
 
          const [results] = await this.connection.execute(query, params);
 
-         return results?.['affectedRows' as keyof typeof results] || false;
+         return results?.['affectedRows' as keyof typeof results] || 0;
+      } catch (error) {
+         this.verbose && console.error(error);
+         return false;
+      }
+   }
+
+   async delete(options: DeleteQuery): Promise<MountOnly>;
+   async delete(options: DeleteOptions): Promise<number | false>;
+   async delete(options: DeleteOptions): Promise<number | false | MountOnly> {
+      try {
+         this.connect();
+
+         const defaults = { ...defaultOptions.delete, ...options };
+
+         const table = setBacktick(defaults.table);
+         const where = defaults.where ? ` WHERE ${defaults.where}` : '';
+         const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
+         const { params } = defaults;
+
+         const query = `DELETE FROM ${table}${where}${limit};`;
+
+         if (defaults.mountOnly)
+            return {
+               query,
+               params,
+            };
+
+         this.verbose && console.log(query, params);
+
+         const [results] = await this.connection.execute(query, params);
+
+         return results?.['affectedRows' as keyof typeof results] || 0;
       } catch (error) {
          this.verbose && console.error(error);
          return false;

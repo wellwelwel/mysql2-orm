@@ -22,6 +22,8 @@
       "sourceMap": false,
       "declaration": true,
 
+      "skipLibCheck": true,
+
       "declarationDir": "./",
       "outDir": "dist"
    }

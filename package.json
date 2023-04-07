@@ -18,16 +18,16 @@
       "update:major": "npm run update; npm run build; npm version major --no-git-tag-version;"
    },
    "dependencies": {
-      "mysql2": "^2.3.3"
+      "mysql2": "^3.2.0"
    },
    "devDependencies": {
-      "@babel/preset-env": "^7.20.2",
+      "@babel/preset-env": "^7.21.4",
       "@rollup/plugin-babel": "^6.0.3",
-      "@types/node": "^18.11.18",
+      "@types/node": "^18.15.11",
       "packages-update": "^1.2.1",
-      "prettier": "^2.8.1",
-      "rollup": "^3.9.0",
-      "typescript": "^4.9.4"
+      "prettier": "^2.8.7",
+      "rollup": "^3.20.2",
+      "typescript": "^5.0.3"
    },
    "license": "MIT",
    "repository": {

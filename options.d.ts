@@ -32,4 +32,11 @@ export declare const defaultOptions: {
         params: never[];
         mountOnly: boolean;
     };
+    delete: {
+        table: string;
+        where: null;
+        limit: null;
+        params: never[];
+        mountOnly: boolean;
+    };
 };

@@ -50,6 +50,10 @@ export interface UpdateQuery extends UpdateOptions {
    mountOnly: true;
 }
 
+export interface DeleteQuery extends DeleteOptions {
+   mountOnly: true;
+}
+
 export interface UpdateAffectedRows extends UpdateOptions {
    set: Row;
 }
@@ -96,6 +100,14 @@ export interface InsertOptions {
 export interface UpdateOptions {
    table: string;
    set: SetValues;
+   where?: string;
+   limit?: number;
+   params?: Params[];
+   mountOnly?: boolean;
+}
+
+export interface DeleteOptions {
+   table: string;
    where?: string;
    limit?: number;
    params?: Params[];
