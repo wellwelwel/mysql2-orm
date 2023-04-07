@@ -29,10 +29,10 @@
 
    ```javascript
    import { MySQL } from 'mysql2-orm';
-   import { ... } from 'mysql2-orm/types';
+   import { ... } from 'mysql2-orm/lib/types';
    ```
 
-   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
+   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node) as developer dependencie
 
 <hr />
 
