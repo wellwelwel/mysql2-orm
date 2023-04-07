@@ -80,7 +80,7 @@ await mysql.end();
    await mysql.select({
       columns: ['name', 'type'],
       table: 'pokemons',
-      where: '`type` IN(?, ?)',
+      where: 'type IN(?, ?)',
       params: ['water', 'grass'],
       limit: 2,
       orderBy: ['name', 'DESC'],
@@ -90,7 +90,7 @@ await mysql.end();
    ```
 
    ```sql
-   SELECT `name`, `type` FROM `pokemons` WHERE `type` IN(?, ?) ORDER BY `name` DESC LIMIT 2;
+   SELECT `name`, `type` FROM `pokemons` WHERE type IN(?, ?) ORDER BY `name` DESC LIMIT 2;
    -- params: [ 'water', 'grass' ]
    ```
 
@@ -125,7 +125,7 @@ await mysql.end();
             b: 'pokemons.id',
          },
       },
-      where: '`userId` = ?',
+      where: 'userId = ?',
       params: [1],
    });
 
@@ -204,7 +204,7 @@ await mysql.end();
          name: 'Squirtle',
          type: 'water',
       },
-      where: '`id` = ?',
+      where: 'id = ?',
       params: [2],
       limit: 1,
    });
@@ -213,8 +213,34 @@ await mysql.end();
    ```
 
    ```sql
-   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE `id` = ? LIMIT 1;
+   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE id = ? LIMIT 1;
    -- params: [ 'Squirtle', 'water', 2 ]
+   ```
+
+<br />
+
+> `where`, `params` and `limit` are optionals
+
+<hr />
+
+#### Delete
+
+-  Example
+
+   ```javascript
+   await mysql.delete({
+      table: 'pokemons',
+      where: 'id = ?',
+      params: [2],
+      limit: 1,
+   });
+
+   // Returns the number of affectedRows
+   ```
+
+   ```sql
+   DELETE FROM `pokemons` WHERE id = ? LIMIT 1;
+   -- params: [ 2 ]
    ```
 
 <br />
