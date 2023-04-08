@@ -36,7 +36,7 @@
 
       -  `npm i @types/node -D`
 
-> -  If you are getting the **error**:
+> -  If you are getting the [error](https://github.com/sidorares/node-mysql2/issues/1722):
 >
 >    ```js
 >       export interface PoolConnection extends mysql.PoolConnection, Connection {
