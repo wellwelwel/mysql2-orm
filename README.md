@@ -33,7 +33,20 @@
    ```
 
    -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
+
       -  `npm i @types/node -D`
+
+> -  If you are getting the **error**:
+>
+>    ```js
+>       export interface PoolConnection extends mysql.PoolConnection, Connection {
+>    ```
+>
+>    Add in your `tsconfig.json`:
+>
+>    ```json
+>    "skipLibCheck": true,
+>    ```
 
 <hr />
 
