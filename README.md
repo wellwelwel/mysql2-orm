@@ -47,7 +47,7 @@
    > Add in your `tsconfig.json`:
    >
    > ```json
-   > "skipLibCheck": true,
+   >    "skipLibCheck": true,
    > ```
 
 <hr />
