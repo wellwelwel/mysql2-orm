@@ -28,6 +28,9 @@ jobs:
       - name: 🤹🏻‍♀️ Building Tests
         run: npm run test:build
 
+      - name: 🥷🏻 Waiting for MySQL to be Ready for Connections
+        run: sleep 8
+
       - name: 🧪 Testing Services - Insert
         run: npm run test:insert
 
