@@ -1,0 +1,54 @@
+name: 📩
+on:
+  workflow_run:
+    workflows: ['🔬']
+    types:
+      - completed
+jobs:
+  test-services:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'v') && github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: ➕ Actions - Checkout
+        uses: actions/checkout@v3
+
+      - name: ➕ Actions - Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: ➕ Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: 📦 Installing Dependencies
+        run: npm ci
+
+      - name: 🤹🏻‍♀️ Building the Project
+        run: npm run build
+
+      - name: 📂 Checking "lib"
+        if: ${{ success() }}
+        run: |
+          if [ ! -d "./lib" ]; then
+            echo "Directory ./lib doesn't exist"
+            exit 1
+          fi
+
+      - name: 📂 Checking "lib/index.js"
+        if: ${{ success() }}
+        run: |
+          if [ ! -f "./lib/index.js" ]; then
+            echo "File ./lib.index.js doesn't exist"
+            exit 1
+          fi
+
+      - name: 📥 Publishing Package
+        if: ${{ success() }}
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

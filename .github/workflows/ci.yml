@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: ➕ Cache dependencies
         uses: actions/cache@v3
@@ -53,9 +52,3 @@ jobs:
 
       - name: 🧪 Testing Services - Original Connection
         run: npm run test:original
-
-      - name: 📥 Publishing Package
-        if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'v') && success()
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
