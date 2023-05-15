@@ -21,12 +21,12 @@
       "test:original": "cd .github/workflows/tests && node lib/get-connection;"
    },
    "dependencies": {
-      "mysql2": "^3.2.2"
+      "mysql2": "^3.3.1"
    },
    "devDependencies": {
-      "@types/node": "^18.15.11",
+      "@types/node": "^20.1.4",
       "packages-update": "^1.2.1",
-      "prettier": "^2.8.7",
+      "prettier": "^2.8.8",
       "typescript": "^5.0.4"
    },
    "license": "MIT",
