@@ -1,8 +1,8 @@
 name: 🔬
 on:
   push:
-      branches:
-        - '*'
+    branches:
+      - '*'
 jobs:
   test-services:
     runs-on: ubuntu-latest
@@ -14,13 +14,21 @@ jobs:
       - name: ➕ Actions - Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: '19.x'
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: ➕ Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: 📦 Installing Dependencies
+        run: npm ci
 
       - name: 🐳 Building MySQL Container Container
         run: docker-compose -f ./.github/workflows/docker/docker-compose.yml up -d
-
-      - name: 📦 Installing Dependencies
-        run: npm run init && npm i typescript @types/node -D
 
       - name: 🤹🏻‍♀️ Building the Project
         run: npm run build
@@ -45,3 +53,9 @@ jobs:
 
       - name: 🧪 Testing Services - Original Connection
         run: npm run test:original
+
+      - name: 📥 Publishing Package
+        if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'v') && success()
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
