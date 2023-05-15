@@ -16,7 +16,7 @@ jobs:
       - name: Get commit message
         id: get_commit_message
         run: |
-          COMMIT_MESSAGE=$(curl --location --request GET 'https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA' \
+          COMMIT_MESSAGE=$(curl --location --request GET 'https://api.github.com/repos/$GITHUB_REPOSITORY/commits/main' \
           --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header 'Accept: application/vnd.github.v3+json' | jq .commit.message | tr -d \")
           echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
