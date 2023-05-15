@@ -1,7 +1,7 @@
 name: 📩
 on:
   workflow_run:
-    workflows: ['🔬']
+    workflows: [🔬]
     types:
       - completed
 jobs:
