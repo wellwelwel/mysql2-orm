@@ -7,46 +7,58 @@ on:
 jobs:
   npm:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.event.head_commit.message, 'v') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ startsWith(github.event.head_commit.message, 'v') }}
     steps:
       - name: ➕ Actions - Checkout
         uses: actions/checkout@v3
 
-      - name: ➕ Actions - Setup NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: ➕ Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
-
-      - name: 📦 Installing Dependencies
-        run: npm ci
-
-      - name: 🤹🏻‍♀️ Building the Project
-        run: npm run build
-
-      - name: 📂 Checking "lib"
+      - name: Get commit message
+        id: get_commit_message
         run: |
-          if [ ! -d "./lib" ]; then
-            echo "Directory ./lib doesn't exist"
-            exit 1
-          fi
+          COMMIT_MESSAGE=$(curl --location --request GET 'https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA' \
+          --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'Accept: application/vnd.github.v3+json' | jq .commit.message | tr -d \")
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
 
-      - name: 📂 Checking "lib/index.js"
-        run: |
-          if [ ! -f "./lib/index.js" ]; then
-            echo "File ./lib.index.js doesn't exist"
-            exit 1
-          fi
+      - name: Echo commit message
+        run: echo $COMMIT_MESSAGE
 
-      - name: 📥 Publishing Package
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # - name: ➕ Actions - Setup NodeJS
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '18.x'
+      #     registry-url: 'https://registry.npmjs.org'
+
+      # - name: ➕ Cache dependencies
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ~/.npm
+      #     key: npm-${{ hashFiles('package-lock.json') }}
+      #     restore-keys: npm-
+
+      # - name: 📦 Installing Dependencies
+      #   run: npm ci
+
+      # - name: 🤹🏻‍♀️ Building the Project
+      #   run: npm run build
+
+      # - name: 📂 Checking "lib"
+      #   run: |
+      #     if [ ! -d "./lib" ]; then
+      #       echo "Directory ./lib doesn't exist"
+      #       exit 1
+      #     fi
+
+      # - name: 📂 Checking "lib/index.js"
+      #   run: |
+      #     if [ ! -f "./lib/index.js" ]; then
+      #       echo "File ./lib.index.js doesn't exist"
+      #       exit 1
+      #     fi
+
+      # - name: 📥 Publishing Package
+      #   if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      #   run: npm publish
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
