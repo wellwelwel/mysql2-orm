@@ -7,7 +7,7 @@ on:
 jobs:
   npm:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && startsWith(github.event.head_commit.message, 'v')
+    if: ${{ startsWith(github.event.head_commit.message, 'v') }}
     steps:
       - name: ➕ Actions - Checkout
         uses: actions/checkout@v3
@@ -32,7 +32,6 @@ jobs:
         run: npm run build
 
       - name: 📂 Checking "lib"
-        if: ${{ success() }}
         run: |
           if [ ! -d "./lib" ]; then
             echo "Directory ./lib doesn't exist"
@@ -40,7 +39,6 @@ jobs:
           fi
 
       - name: 📂 Checking "lib/index.js"
-        if: ${{ success() }}
         run: |
           if [ ! -f "./lib/index.js" ]; then
             echo "File ./lib.index.js doesn't exist"
@@ -48,7 +46,7 @@ jobs:
           fi
 
       - name: 📥 Publishing Package
-        if: ${{ success() }}
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
