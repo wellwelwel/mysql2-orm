@@ -1,4 +1,4 @@
-name: CI
+name: Workflows
 on:
   push:
     branches:
@@ -52,3 +52,49 @@ jobs:
 
       - name: 🧪 Testing Services - Original Connection
         run: npm run test:original
+
+  npm:
+    runs-on: ubuntu-latest
+    needs: [CI]
+    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'v')
+    steps:
+      - name: ➕ Actions - Checkout
+        uses: actions/checkout@v3
+
+      - name: ➕ Actions - Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: ➕ Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: 📦 Installing Dependencies
+        run: npm ci
+
+      - name: 🤹🏻‍♀️ Building the Project
+        run: npm run build
+
+      - name: 📂 Checking "lib"
+        run: |
+          if [ ! -d "./lib" ]; then
+            echo "Directory ./lib doesn't exist"
+            exit 1
+          fi
+
+      - name: 📂 Checking "lib/index.js"
+        run: |
+          if [ ! -f "./lib/index.js" ]; then
+            echo "File ./lib.index.js doesn't exist"
+            exit 1
+          fi
+
+      - name: 📥 Publishing Package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
