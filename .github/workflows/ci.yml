@@ -1,10 +1,10 @@
-name: 🔬
+name: CI
 on:
   push:
     branches:
       - '*'
 jobs:
-  test-services:
+  services:
     runs-on: ubuntu-latest
     if: ${{ !startsWith(github.event.head_commit.message, 'no-ci') }}
     steps:
