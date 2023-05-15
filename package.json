@@ -1,6 +1,6 @@
 {
    "name": "mysql2-orm",
-   "version": "2.1.3",
+   "version": "2.1.4",
    "main": "./lib/index.js",
    "scripts": {
       "prebuild": "rm -rf './lib';",
