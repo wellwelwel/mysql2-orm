@@ -5,7 +5,7 @@ on:
     types:
       - completed
 jobs:
-  test-services:
+  publish:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'v') && github.event.workflow_run.conclusion == 'success'
     steps:
