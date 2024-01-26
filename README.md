@@ -13,28 +13,28 @@
 
 #### Import
 
--  ES Modules
+- ES Modules
 
-   ```javascript
-   import { MySQL } from 'mysql2-orm';
-   ```
+  ```javascript
+  import { MySQL } from 'mysql2-orm';
+  ```
 
--  CommonJS
+- CommonJS
 
-   ```javascript
-   const { MySQL } = require('mysql2-orm');
-   ```
+  ```javascript
+  const { MySQL } = require('mysql2-orm');
+  ```
 
--  TypeScript
+- TypeScript
 
-   ```javascript
-   import { MySQL } from 'mysql2-orm';
-   import { ... } from 'mysql2-orm/types';
-   ```
+  ```javascript
+  import { MySQL } from 'mysql2-orm';
+  import { ... } from 'mysql2-orm/types';
+  ```
 
-   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
+  - You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
 
-      -  `npm i @types/node -D`
+    - `npm i @types/node -D`
 
 <hr />
 
@@ -42,11 +42,11 @@
 
 ```javascript
 const mysql = new MySQL({
-   host: 'localhost',
-   port: 3306,
-   user: 'user',
-   password: 'pass',
-   database: 'dbname',
+  host: 'localhost',
+  port: 3306,
+  user: 'user',
+  password: 'pass',
+  database: 'dbname',
 });
 ```
 
@@ -62,91 +62,91 @@ await mysql.end();
 
 #### Select
 
--  Select all rows
+- Select all rows
 
-   ```javascript
-   await mysql.select({
+  ```javascript
+  await mysql.select({
+    table: 'pokemons',
+  });
+
+  // Returns an array with the results
+  ```
+
+  ```sql
+  SELECT * FROM `pokemons`;
+  ```
+
+- Select specific rows
+
+  ```javascript
+  await mysql.select({
+    columns: ['name', 'type'],
+    table: 'pokemons',
+    where: 'type IN(?, ?)',
+    params: ['water', 'grass'],
+    limit: 2,
+    orderBy: ['name', 'DESC'],
+  });
+
+  // Returns an array with the results
+  ```
+
+  ```sql
+  SELECT `name`, `type` FROM `pokemons` WHERE type IN(?, ?) ORDER BY `name` DESC LIMIT 2;
+
+  -- params: [ 'water', 'grass' ]
+  ```
+
+- Count all rows
+
+  ```javascript
+  await mysql.select({
+    columns: 'COUNT(*) AS `total`',
+    table: 'pokemons',
+    limit: 1,
+  });
+
+  // Because "limit: 1", it returns a direct object with the result: { total: ... }
+  ```
+
+  ```sql
+  SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
+  ```
+
+- JOIN: `inner` | `left` | `right` | `cross`
+
+  ```javascript
+  await mysql.select({
+    columns: ['pokemons.name', 'pokemons.type'],
+    table: 'captureds',
+    join: {
+      type: 'left',
+      // outer: false,
       table: 'pokemons',
-   });
-
-   // Returns an array with the results
-   ```
-
-   ```sql
-   SELECT * FROM `pokemons`;
-   ```
-
--  Select specific rows
-
-   ```javascript
-   await mysql.select({
-      columns: ['name', 'type'],
-      table: 'pokemons',
-      where: 'type IN(?, ?)',
-      params: ['water', 'grass'],
-      limit: 2,
-      orderBy: ['name', 'DESC'],
-   });
-
-   // Returns an array with the results
-   ```
-
-   ```sql
-   SELECT `name`, `type` FROM `pokemons` WHERE type IN(?, ?) ORDER BY `name` DESC LIMIT 2;
-
-   -- params: [ 'water', 'grass' ]
-   ```
-
--  Count all rows
-
-   ```javascript
-   await mysql.select({
-      columns: 'COUNT(*) AS `total`',
-      table: 'pokemons',
-      limit: 1,
-   });
-
-   // Because "limit: 1", it returns a direct object with the result: { total: ... }
-   ```
-
-   ```sql
-   SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
-   ```
-
--  JOIN: `inner` | `left` | `right` | `cross`
-
-   ```javascript
-   await mysql.select({
-      columns: ['pokemons.name', 'pokemons.type'],
-      table: 'captureds',
-      join: {
-         type: 'left',
-         // outer: false,
-         table: 'pokemons',
-         on: {
-            a: 'captureds.pokemonId',
-            b: 'pokemons.id',
-         },
+      on: {
+        a: 'captureds.pokemonId',
+        b: 'pokemons.id',
       },
-      where: 'userId = ?',
-      params: [1],
-   });
+    },
+    where: 'userId = ?',
+    params: [1],
+  });
 
-   // Returns an array with the results
-   ```
+  // Returns an array with the results
+  ```
 
-   ```sql
-   SELECT `pokemons`.`name`, `pokemons`.`type`
-      FROM `captureds`
-      LEFT JOIN `pokemons`
-         ON `captureds`.`pokemonId` = `pokemons`.`id`
-      WHERE userId = ?
-   ;
+  ```sql
+  SELECT `pokemons`.`name`, `pokemons`.`type`
+     FROM `captureds`
+     LEFT JOIN `pokemons`
+        ON `captureds`.`pokemonId` = `pokemons`.`id`
+     WHERE userId = ?
+  ;
 
-   -- params: [ 1 ]
-   ```
+  -- params: [ 1 ]
+  ```
 
-   -  The **`join` option** accetps a direct `object` or an `array` with multiple `JOIN`
+  - The **`join` option** accetps a direct `object` or an `array` with multiple `JOIN`
 
 <br />
 
@@ -158,72 +158,72 @@ await mysql.end();
 
 #### Insert
 
--  Insert a single row
+- Insert a single row
 
-   ```javascript
-   await mysql.insert({
-      table: 'pokemons',
-      values: {
-         name: 'Mew',
-         type: 'psychic',
-      },
-   });
+  ```javascript
+  await mysql.insert({
+    table: 'pokemons',
+    values: {
+      name: 'Mew',
+      type: 'psychic',
+    },
+  });
 
-   // Returns: last insert id
-   ```
+  // Returns: last insert id
+  ```
 
-   ```sql
-   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
+  ```sql
+  INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
 
-   -- params: [ 'Mew', 'psychic' ]
-   ```
+  -- params: [ 'Mew', 'psychic' ]
+  ```
 
--  Insert multiple rows
+- Insert multiple rows
 
-   ```js
-   await mysql.insert({
-      table: 'pokemons',
-      values: [
-         { name: 'Pichu', type: 'electric' },
-         { name: 'Mewtwo', type: 'psychic' },
-      ],
-   });
+  ```js
+  await mysql.insert({
+    table: 'pokemons',
+    values: [
+      { name: 'Pichu', type: 'electric' },
+      { name: 'Mewtwo', type: 'psychic' },
+    ],
+  });
 
-   // Returns: first row id from multiple insert
-   ```
+  // Returns: first row id from multiple insert
+  ```
 
-   ```sql
-   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
+  ```sql
+  INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
 
-   -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
-   ```
+  -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
+  ```
 
 <hr />
 
 #### Update
 
--  Example
+- Example
 
-   ```javascript
-   await mysql.update({
-      table: 'pokemons',
-      set: {
-         name: 'Squirtle',
-         type: 'water',
-      },
-      where: 'id = ?',
-      params: [2],
-      limit: 1,
-   });
+  ```javascript
+  await mysql.update({
+    table: 'pokemons',
+    set: {
+      name: 'Squirtle',
+      type: 'water',
+    },
+    where: 'id = ?',
+    params: [2],
+    limit: 1,
+  });
 
-   // Returns the number of affectedRows
-   ```
+  // Returns the number of affectedRows
+  ```
 
-   ```sql
-   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE id = ? LIMIT 1;
+  ```sql
+  UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE id = ? LIMIT 1;
 
-   -- params: [ 'Squirtle', 'water', 2 ]
-   ```
+  -- params: [ 'Squirtle', 'water', 2 ]
+  ```
 
 <br />
 
@@ -233,24 +233,24 @@ await mysql.end();
 
 #### Delete
 
--  Example
+- Example
 
-   ```javascript
-   await mysql.delete({
-      table: 'pokemons',
-      where: 'id = ?',
-      params: [2],
-      limit: 1,
-   });
+  ```javascript
+  await mysql.delete({
+    table: 'pokemons',
+    where: 'id = ?',
+    params: [2],
+    limit: 1,
+  });
 
-   // Returns the number of affectedRows
-   ```
+  // Returns the number of affectedRows
+  ```
 
-   ```sql
-   DELETE FROM `pokemons` WHERE id = ? LIMIT 1;
+  ```sql
+  DELETE FROM `pokemons` WHERE id = ? LIMIT 1;
 
-   -- params: [ 2 ]
-   ```
+  -- params: [ 2 ]
+  ```
 
 <br />
 
@@ -262,59 +262,59 @@ await mysql.end();
 
 ```javascript
 await mysql.select({
-   // ...
-   mountOnly: true,
+  // ...
+  mountOnly: true,
 });
 ```
 
--  Returns an object with the final `query` and `params`, without execute the query
--  Works with `select`, `insert` and `update` ORM functions
--  This is very useful for [subqueries](./samples/subqueries.ts) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
+- Returns an object with the final `query` and `params`, without execute the query
+- Works with `select`, `insert` and `update` ORM functions
+- This is very useful for [subqueries](./samples/subqueries.ts) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
 <hr />
 
 #### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
 
--  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
+- Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
 
-   ```javascript
-   const mysql2 = await mysql.getConnection();
+  ```javascript
+  const mysql2 = await mysql.getConnection();
 
-   /**
-    * mysql2.execute,
-    * mysql2.beginTransaction,
-    * mysql2.commit,
-    * mysql2.rollback,
-    * etc.
-    *
-    * See all options in: https://github.com/sidorares/node-mysql2
-    */
-   ```
+  /**
+   * mysql2.execute,
+   * mysql2.beginTransaction,
+   * mysql2.commit,
+   * mysql2.rollback,
+   * etc.
+   *
+   * See all options in: https://github.com/sidorares/node-mysql2
+   */
+  ```
 
--  Mixing the Packages
+- Mixing the Packages
 
-   ```javascript
-   await mysql2.beginTransaction();
+  ```javascript
+  await mysql2.beginTransaction();
 
-   try {
-      const inserted = await mysql.insert({
-         table: 'pokemons',
-         values: [
-            { name: 'Pichu', type: 'electric' },
-            { name: 'Mewtwo', type: 'psychic' },
-         ],
-      });
+  try {
+    const inserted = await mysql.insert({
+      table: 'pokemons',
+      values: [
+        { name: 'Pichu', type: 'electric' },
+        { name: 'Mewtwo', type: 'psychic' },
+      ],
+    });
 
-      if (!inserted) throw new Error('Something is wrong, coming back');
+    if (!inserted) throw new Error('Something is wrong, coming back');
 
-      await mysql2.commit();
-   } catch (error) {
-      await mysql2.rollback();
-      console.error(error.message);
-   } finally {
-      await mysql.end();
-   }
-   ```
+    await mysql2.commit();
+  } catch (error) {
+    await mysql2.rollback();
+    console.error(error.message);
+  } finally {
+    await mysql.end();
+  }
+  ```
 
 <hr />
 
@@ -335,27 +335,27 @@ setBacktick('table.column');  // `table`.`column`
 
 ### Notes
 
--  See practical examples in [samples](./samples/)
--  Use `verbose` to see final queries in console
+- See practical examples in [samples](./samples/)
+- Use `verbose` to see final queries in console
 
--  -  [x] Features
-      -  [x] [`SELECT`](./samples/select.ts)
-         -  [x] DISTINCT
-         -  [x] JOIN
-         -  [x] WHERE
-         -  [x] GROUP BY
-         -  [x] ORDER BY
-         -  [x] LIMIT
-         -  [x] OFFSET
-      -  [x] [`UPDATE`](./samples/update.ts)
-         -  [x] WHERE
-         -  [x] LIMIT
-      -  [x] [`DELETE`](./samples/delete.ts)
-         -  [x] WHERE
-         -  [x] LIMIT
-      -  [x] [`INSERT`](./samples/insert.ts)
-      -  [x] [`TRANSACTION`](./samples/transaction.ts)
-      -  [x] [`SUBQUERIES`](./samples/subqueries.ts)
+- - [x] Features
+    - [x] [`SELECT`](./samples/select.ts)
+      - [x] DISTINCT
+      - [x] JOIN
+      - [x] WHERE
+      - [x] GROUP BY
+      - [x] ORDER BY
+      - [x] LIMIT
+      - [x] OFFSET
+    - [x] [`UPDATE`](./samples/update.ts)
+      - [x] WHERE
+      - [x] LIMIT
+    - [x] [`DELETE`](./samples/delete.ts)
+      - [x] WHERE
+      - [x] LIMIT
+    - [x] [`INSERT`](./samples/insert.ts)
+    - [x] [`TRANSACTION`](./samples/transaction.ts)
+    - [x] [`SUBQUERIES`](./samples/subqueries.ts)
 
 <hr />
 
@@ -368,4 +368,4 @@ setBacktick('table.column');  // `table`.`column`
 
 <hr />
 
--  Check the original [**mysql2**](https://www.npmjs.com/package/mysql2) project [**here**](https://github.com/sidorares/node-mysql2).
+- Check the original [**mysql2**](https://www.npmjs.com/package/mysql2) project [**here**](https://github.com/sidorares/node-mysql2).

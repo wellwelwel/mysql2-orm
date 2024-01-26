@@ -1,7 +1,7 @@
 import mysql from './connection.js';
 
 const result = await mysql.select({
-   table: 'pokemons',
+  table: 'pokemons',
 });
 
 await mysql.end();
