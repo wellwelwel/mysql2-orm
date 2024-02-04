@@ -1,264 +1,226 @@
-import { Pool, createPool } from 'mysql2/promise';
-import forceArray from './helpers/force-array.js';
-import setBacktick from './helpers/set-backtick.js';
 import {
-  Credentials,
-  SelectOptions,
-  InsertOptions,
-  UpdateOptions,
-  InsertSet,
-  UpdateSet,
-  SetValues,
-  Row,
-  MountOnly,
-  SelectQuery,
-  SelectFirstRow,
-  SelectDefaultQuery,
-  InsertQuery,
-  InsertFirstRowId,
-  InsertRowId,
-  UpdateQuery,
-  UpdateAffectedRows,
-  DeleteOptions,
-  DeleteQuery,
-} from './types.js';
-import { defaultOptions } from './options.js';
+  Pool,
+  createPool,
+  PoolOptions,
+  RowDataPacket,
+  ResultSetHeader,
+  PoolConnection,
+} from 'mysql2/promise';
+import { INSERT, InsertOptions } from './queries/insert.js';
+import { SELECT, SelectOptions } from './queries/select.js';
+import { UPDATE, UpdateOptions } from './queries/update.js';
+import { DELETE, DeleteOptions } from './queries/delete.js';
+import { backtick } from './helpers/backtick.js';
+import { Param } from './types/param.js';
+import { OP as op } from './queries/where/methods.js';
 
-const MySQL = class {
-  public verbose: boolean;
-  public credentials: Credentials;
-  public connection: Pool;
+type Getter<T, Method extends keyof T> = T extends {
+  [K in Method]: infer R;
+}
+  ? R
+  : never;
 
-  constructor(credentials: Credentials) {
-    this.verbose = false;
+export class MySQL {
+  private debug: boolean;
+  private credentials: PoolOptions;
+  private connection: Pool;
+  private PoolConnection: PoolConnection | null = null;
+
+  constructor(credentials: PoolOptions) {
+    this.debug = false;
     this.credentials = credentials;
     this.connection = createPool(this.credentials);
   }
 
-  connect() {
+  private handleError(error: unknown): void {
+    if (this.debug) {
+      console.log(error);
+    }
+  }
+
+  private get currentConnection(): Pool | PoolConnection {
+    return this.PoolConnection ? this.PoolConnection : this.connection;
+  }
+
+  setDebug(value: boolean) {
+    this.debug = Boolean(value);
+  }
+
+  connect(credentials?: PoolOptions) {
     try {
-      if (!this?.connection) this.connection = createPool(this.credentials);
+      if (this.connection) return true;
+
+      if (credentials) this.credentials = credentials;
+
+      this.connection = createPool(this.credentials);
 
       return true;
     } catch (error) {
-      this.verbose && console.error(error);
+      this.handleError(error);
       return false;
     }
   }
 
-  async select(options: SelectQuery): Promise<MountOnly>;
-  async select(options: SelectFirstRow): Promise<Row | false>;
-  async select(options: SelectDefaultQuery): Promise<Row[] | false>;
-  async select(
-    options: SelectOptions
-  ): Promise<Row[] | Row | MountOnly | false> {
+  async insert<ValueObjectSchema>(
+    options: InsertOptions<ValueObjectSchema>
+  ): Promise<number | false> {
     try {
-      this.connect();
+      const result = INSERT<ValueObjectSchema>(options);
+      const { sql, params } = result;
 
-      const defaults = { ...defaultOptions.select, ...options };
-      const { params } = defaults;
+      if (this.debug) console.log(result);
 
-      const distinct = defaults.distinct ? 'DISTINCT ' : '';
+      const [resultSetHeader] = await this.currentConnection.execute<
+        ResultSetHeader | ResultSetHeader[]
+      >(sql, params);
 
-      const columns =
-        typeof defaults.columns === 'string'
-          ? defaults.columns
-          : defaults.columns.map((column) => setBacktick(column)).join(', ');
-
-      const table = setBacktick(defaults.table);
-
-      const join = forceArray(defaults.join)
-        .map((currentJoin) =>
-          currentJoin?.on?.a && currentJoin?.on?.b
-            ? ` ${currentJoin.type.toUpperCase()}${currentJoin?.outer ? ' OUTER' : ''} JOIN ${setBacktick(
-                currentJoin.table
-              )} ON ${setBacktick(currentJoin.on.a)} = ${setBacktick(currentJoin.on.b)}`
-            : ''
-        )
-        .join('');
-
-      const where = defaults.where ? ` WHERE ${defaults.where}` : '';
-
-      const groupBy = defaults.groupBy
-        ? ` GROUP BY ${setBacktick(defaults.groupBy)}`
-        : '';
-
-      const orderBy = defaults.orderBy[0]
-        ? ` ORDER BY ${setBacktick(defaults.orderBy[0])} ${defaults?.orderBy[1] || 'ASC'}`
-        : '';
-
-      const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
-      const offset = defaults?.offset
-        ? defaults.offset > 0
-          ? ` OFFSET ${defaults.offset}`
-          : ''
-        : '';
-
-      const query = `SELECT ${distinct}${columns} FROM ${table}${join}${where}${groupBy}${orderBy}${limit}${offset}${
-        !defaults.mountOnly ? ';' : ''
-      }`;
-
-      if (defaults.mountOnly)
-        return {
-          query,
-          params,
-        };
-
-      this.verbose && console.log(query, params);
-
-      const [rows] = await this.connection.execute(query, params);
-
-      if (defaults.limit === 1) return rows[0 as keyof typeof rows] || false;
-
-      return (rows as Row[]) || false;
+      return Array.isArray(resultSetHeader)
+        ? resultSetHeader[0].insertId
+        : resultSetHeader.insertId;
     } catch (error) {
-      this.verbose && console.error(error);
+      this.handleError(error);
       return false;
     }
   }
 
-  async insert(options: InsertQuery): Promise<MountOnly>;
-  async insert(options: InsertRowId): Promise<number | false>;
-  async insert(options: InsertFirstRowId): Promise<number | false>;
-  async insert(options: InsertOptions): Promise<number | false | MountOnly> {
+  async select<T extends RowDataPacket[] | RowDataPacket[][] = RowDataPacket[]>(
+    options: Omit<SelectOptions, 'limit'> & { limit: 1 }
+  ): Promise<T[0] | false>;
+  async select<T extends RowDataPacket[] | RowDataPacket[][] = RowDataPacket[]>(
+    options: SelectOptions
+  ): Promise<T | false>;
+  async select<T extends RowDataPacket[] | RowDataPacket[][] = RowDataPacket[]>(
+    options: SelectOptions
+  ): Promise<T[0] | T | false> {
     try {
-      this.connect();
+      const result = SELECT(options);
+      const { sql, params } = result;
 
-      const defaults = { ...defaultOptions.insert, ...options };
-      const set: InsertSet = {
-        columns: [],
-        values: [],
-        params: [],
-      };
+      if (this.debug) console.log(result);
 
-      forceArray(defaults.values).forEach((insertion: SetValues) => {
-        console.log(insertion);
-        const totalColumns = Object?.keys(insertion)?.length;
-        const bindValues: '?'[] = Array(totalColumns).fill('?');
-
-        set.values.push(`(${bindValues.join(', ')})`);
-
-        for (const column in insertion) {
-          !set.columns.includes(setBacktick(column)) &&
-            set.columns.push(setBacktick(column));
-          set.params.push(insertion[column]);
-        }
+      const [rows] = await this.currentConnection.execute<T>({
+        sql,
+        values: params,
+        typeCast: options?.typeCast,
+        rowsAsArray: options?.rowsAsArray,
       });
 
-      const table = setBacktick(defaults.table);
-      const columns = set.columns.join(', ');
-      const values = set.values.join(', ');
-      const { params } = set;
-
-      const query = `INSERT INTO ${table} (${columns}) VALUES ${values};`;
-
-      if (defaults.mountOnly)
-        return {
-          query,
-          params,
-        };
-
-      this.verbose && console.log(query, params);
-
-      const [results] = await this.connection.execute(query, params);
-
-      return results?.['insertId' as keyof typeof results] || false;
+      if (options?.limit === 1) return rows[0];
+      return rows;
     } catch (error) {
-      this.verbose && console.error(error);
+      this.handleError(error);
       return false;
     }
   }
 
-  async update(options: UpdateQuery): Promise<MountOnly>;
-  async update(options: UpdateAffectedRows): Promise<number | false>;
-  async update(options: UpdateOptions): Promise<number | false | MountOnly> {
+  async update(options: UpdateOptions): Promise<number | false> {
+    try {
+      const result = UPDATE(options);
+      const { sql, params } = result;
+
+      if (this.debug) console.log(result);
+
+      const [resultSetHeader] = await this.currentConnection.execute<
+        ResultSetHeader | ResultSetHeader[]
+      >(sql, params);
+
+      return Array.isArray(resultSetHeader)
+        ? resultSetHeader[0].affectedRows
+        : resultSetHeader.affectedRows;
+    } catch (error) {
+      this.handleError(error);
+      return false;
+    }
+  }
+
+  async delete(options: DeleteOptions): Promise<number | false> {
     try {
       this.connect();
 
-      const defaults = { ...defaultOptions.update, ...options };
-      const set: UpdateSet = {
-        columns: [],
-        params: [],
-      };
+      const result = DELETE(options);
+      const { sql, params } = result;
 
-      for (const column in defaults.set) {
-        set.columns.push(`${setBacktick(column)} = ?`);
-        set.params.push(defaults.set[column]);
-      }
+      if (this.debug) console.log(result);
 
-      const table = setBacktick(defaults.table);
-      const where = defaults.where ? ` WHERE ${defaults.where}` : '';
-      const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
-      const params = [...set.params, ...defaults.params];
+      const [resultSetHeader] = await this.currentConnection.execute<
+        ResultSetHeader | ResultSetHeader[]
+      >(sql, params);
 
-      const query = `UPDATE ${table} SET ${set.columns.join(', ')}${where}${limit};`;
-
-      if (defaults.mountOnly)
-        return {
-          query,
-          params,
-        };
-
-      this.verbose && console.log(query, params);
-
-      const [results] = await this.connection.execute(query, params);
-
-      return results?.['affectedRows' as keyof typeof results] || 0;
+      return Array.isArray(resultSetHeader)
+        ? resultSetHeader[0].affectedRows
+        : resultSetHeader.affectedRows;
     } catch (error) {
-      this.verbose && console.error(error);
+      this.handleError(error);
       return false;
     }
   }
 
-  async delete(options: DeleteQuery): Promise<MountOnly>;
-  async delete(options: DeleteOptions): Promise<number | false>;
-  async delete(options: DeleteOptions): Promise<number | false | MountOnly> {
-    try {
-      this.connect();
+  async beginTransaction(): Promise<void> {
+    if (this.PoolConnection) return;
 
-      const defaults = { ...defaultOptions.delete, ...options };
-
-      const table = setBacktick(defaults.table);
-      const where = defaults.where ? ` WHERE ${defaults.where}` : '';
-      const limit = defaults.limit ? ` LIMIT ${defaults.limit}` : '';
-      const { params } = defaults;
-
-      const query = `DELETE FROM ${table}${where}${limit};`;
-
-      if (defaults.mountOnly)
-        return {
-          query,
-          params,
-        };
-
-      this.verbose && console.log(query, params);
-
-      const [results] = await this.connection.execute(query, params);
-
-      return results?.['affectedRows' as keyof typeof results] || 0;
-    } catch (error) {
-      this.verbose && console.error(error);
-      return false;
-    }
+    this.PoolConnection = await this.connection.getConnection();
+    await this.PoolConnection.beginTransaction();
   }
 
-  async getConnection() {
-    this.connect();
+  async rollback(): Promise<void> {
+    if (!this.PoolConnection) return;
 
-    return await this.connection.getConnection();
+    await this.PoolConnection.rollback()
+      .then(() => setImmediate(() => this.PoolConnection?.release()))
+      .catch(() => setImmediate(() => this.PoolConnection?.release()))
+      .finally(() => {
+        this.PoolConnection = null;
+      });
   }
 
-  async end() {
-    try {
-      await this.connection.end();
+  async commit(): Promise<void> {
+    if (!this.PoolConnection) return;
 
-      return true;
-    } catch (error) {
-      this.verbose && console.error(error);
-
-      return false;
-    }
+    await this.PoolConnection.commit()
+      .then(() => setImmediate(() => this.PoolConnection?.release()))
+      .catch(() => setImmediate(() => this.PoolConnection?.release()))
+      .finally(() => {
+        this.PoolConnection = null;
+      });
   }
+
+  release(): void {
+    if (!this.PoolConnection) return;
+
+    this.PoolConnection.release();
+    this.PoolConnection = null;
+  }
+
+  get query(): Getter<Pool, 'query'> {
+    return this.currentConnection.query.bind(this.currentConnection);
+  }
+
+  get execute(): Getter<Pool, 'execute'> {
+    return this.currentConnection.execute.bind(this.currentConnection);
+  }
+
+  get end(): Getter<Pool, 'end'> {
+    return this.connection.end.bind(this.connection);
+  }
+}
+
+export const QueryBuilder = {
+  insert: INSERT,
+  select: SELECT,
+  update: UPDATE,
+  delete: DELETE,
 };
 
-export { MySQL, setBacktick };
+export const OP = op;
+
+export const bt = backtick;
+
+export { backtick };
+
+export type {
+  InsertOptions,
+  SelectOptions,
+  UpdateOptions,
+  DeleteOptions,
+  Param,
+};

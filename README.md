@@ -1,62 +1,85 @@
-<h2 align="center">MySQL ORM</h2>
-<p align="center">🎲 This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+[mysql2]: https://github.com/sidorares/node-mysql2
+
+# MySQL2 ORM
+
+🎲 An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive and focused on essential functionality.
+
+<a href="https://www.npmjs.com/package/mysql2-orm"><img src="https://img.shields.io/npm/v/mysql2-orm?style=flat" alt="npm"></a>
+<a href="https://github.com/wellwelwel/mysql2-orm/actions/workflows/ci.yml?query=branch%3Amain"><img src="https://img.shields.io/github/actions/workflow/status/wellwelwel/mysql2-orm/ci.yml?event=push&style=flat&label=ci&branch=main" alt="GitHub Workflow Status (with event)"></a>
+<a href="https://www.npmjs.com/package/mysql2-orm"><img src="https://img.shields.io/npm/dt/mysql2-orm?style=flat" alt="npm"></a>
+
+<!-- <a href="https://github.com/wellwelwel/mysql2-orm/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/wellwelwel/mysql2-orm/main/.github/assets/readme/license.svg" alt="License"></a> -->
+
+> This project uses **mysql2/promise**, **createPool** and **execute** behind the scenes.
+
+## Why
+
+Here are some benefits:
+
+- 🧙🏻‍♀️ Automatic **Prepared Statements** (_including **LIMIT** and **OFFSET**_).
+- 👩🏻‍🔧 It will smartly detect and release the connection when using `commit` or `rollback` in a transaction.
+- 🥷🏻 You can also simply use **QueryBuilder** to mount your queries and use them in the original [**MySQL2**][mysql2].
+- 🔬 **Strictly Typed:** No usage of `any`, `as` neither `satisfies` at all.
+- 🧑🏻‍🍼 It exposes the `execute` and `query` original methods from [**MySQL2**][mysql2] Pool class.
+
+For more detailed **documentation** and **examples**, see bellow.
+
+---
 
 ## Install
 
 ```shell
-   npm i mysql2-orm
+npm i mysql2-orm
 ```
 
-<hr />
+If you are using TypeScript, you will need to install [@types/node](https://www.npmjs.com/package/@types/node).
 
-### Usage
-
-#### Import
-
-- ES Modules
-
-  ```javascript
-  import { MySQL } from 'mysql2-orm';
-  ```
-
-- CommonJS
-
-  ```javascript
-  const { MySQL } = require('mysql2-orm');
-  ```
-
-- TypeScript
-
-  ```javascript
-  import { MySQL } from 'mysql2-orm';
-  import { ... } from 'mysql2-orm/types';
-  ```
-
-  - You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
-
-    - `npm i @types/node -D`
-
-<hr />
-
-#### Connect
-
-```javascript
-const mysql = new MySQL({
-  host: 'localhost',
-  port: 3306,
-  user: 'user',
-  password: 'pass',
-  database: 'dbname',
-});
+```shell
+npm i -D @types/node
 ```
 
-#### Close Connection
+---
 
-```javascript
+## Documentation
+
+### Import
+
+#### ES Modules
+
+```ts
+import { MySQL } from 'mysql2-orm';
+```
+
+#### CommonJS
+
+```ts
+const { MySQL } = require('mysql2-orm');
+```
+
+---
+
+### Connect
+
+```ts
+import { PoolOptions } from 'mysql2/promise';
+import { MySQL } from 'mysql2-orm';
+
+const credentials: PoolOptions = {
+  host: '',
+  user: '',
+  database: '',
+};
+
+const mysql = new MySQL(credentials);
+```
+
+#### Close the connection
+
+```ts
 await mysql.end();
 ```
 
-<hr />
+---
 
 ### Querying
 
@@ -64,7 +87,7 @@ await mysql.end();
 
 - Select all rows
 
-  ```javascript
+  ```ts
   await mysql.select({
     table: 'pokemons',
   });
@@ -78,7 +101,7 @@ await mysql.end();
 
 - Select specific rows
 
-  ```javascript
+  ```ts
   await mysql.select({
     columns: ['name', 'type'],
     table: 'pokemons',
@@ -99,7 +122,7 @@ await mysql.end();
 
 - Count all rows
 
-  ```javascript
+  ```ts
   await mysql.select({
     columns: 'COUNT(*) AS `total`',
     table: 'pokemons',
@@ -115,7 +138,7 @@ await mysql.end();
 
 - JOIN: `inner` | `left` | `right` | `cross`
 
-  ```javascript
+  ```ts
   await mysql.select({
     columns: ['pokemons.name', 'pokemons.type'],
     table: 'captureds',
@@ -150,17 +173,17 @@ await mysql.end();
 
 <br />
 
-> `distinct`, `columns`, `join`, `where`, `params`, `limit` and `orderBy` are optionals  
-> `columns`: the default value is `'*'` and accepts a string or an array with the columns  
+> `distinct`, `columns`, `join`, `where`, `params`, `limit` and `orderBy` are optionals
+> `columns`: the default value is `'*'` and accepts a string or an array with the columns
 > `orderBy`: `[ 'column' ]` or `[ 'column', 'ASC' | 'DESC' ]`
 
-<hr />
+---
 
 #### Insert
 
 - Insert a single row
 
-  ```javascript
+  ```ts
   await mysql.insert({
     table: 'pokemons',
     values: {
@@ -198,13 +221,13 @@ await mysql.end();
   -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
   ```
 
-<hr />
+---
 
 #### Update
 
 - Example
 
-  ```javascript
+  ```ts
   await mysql.update({
     table: 'pokemons',
     set: {
@@ -229,13 +252,13 @@ await mysql.end();
 
 > `where`, `params` and `limit` are optionals
 
-<hr />
+---
 
 #### Delete
 
 - Example
 
-  ```javascript
+  ```ts
   await mysql.delete({
     table: 'pokemons',
     where: 'id = ?',
@@ -256,11 +279,11 @@ await mysql.end();
 
 > `where`, `params` and `limit` are optionals
 
-<hr />
+---
 
 #### Mount Query Only
 
-```javascript
+```ts
 await mysql.select({
   // ...
   mountOnly: true,
@@ -271,13 +294,13 @@ await mysql.select({
 - Works with `select`, `insert` and `update` ORM functions
 - This is very useful for [subqueries](./samples/subqueries.ts) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
 
-<hr />
+---
 
 #### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
 
 - Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
 
-  ```javascript
+  ```ts
   const mysql2 = await mysql.getConnection();
 
   /**
@@ -293,7 +316,7 @@ await mysql.select({
 
 - Mixing the Packages
 
-  ```javascript
+  ```ts
   await mysql2.beginTransaction();
 
   try {
@@ -316,14 +339,14 @@ await mysql.select({
   }
   ```
 
-<hr />
+---
 
 ### Others
 
 #### Backticks
 
 <!-- prettier-ignore -->
-```javascript
+```ts
 import { setBacktick } from 'mysql2-orm';
 
 setBacktick('table');         // `table`
@@ -331,33 +354,36 @@ setBacktick('column');        // `column`
 setBacktick('table.column');  // `table`.`column`
 ```
 
-<hr />
+---
 
 ### Notes
 
 - See practical examples in [samples](./samples/)
-- Use `verbose` to see final queries in console
+- Perform `mysql.setDebug(true)` to see final queries and errors in console
 
-- - [x] Features
-    - [x] [`SELECT`](./samples/select.ts)
-      - [x] DISTINCT
-      - [x] JOIN
-      - [x] WHERE
-      - [x] GROUP BY
-      - [x] ORDER BY
-      - [x] LIMIT
-      - [x] OFFSET
-    - [x] [`UPDATE`](./samples/update.ts)
-      - [x] WHERE
-      - [x] LIMIT
-    - [x] [`DELETE`](./samples/delete.ts)
-      - [x] WHERE
-      - [x] LIMIT
-    - [x] [`INSERT`](./samples/insert.ts)
-    - [x] [`TRANSACTION`](./samples/transaction.ts)
-    - [x] [`SUBQUERIES`](./samples/subqueries.ts)
+---
 
-<hr />
+### Features
+
+- [x] [`SELECT`](./samples/select.ts)
+  - [x] DISTINCT
+  - [x] JOIN
+  - [x] WHERE
+  - [x] GROUP BY
+  - [x] ORDER BY
+  - [x] LIMIT
+  - [x] OFFSET
+- [x] [`UPDATE`](./samples/update.ts)
+  - [x] WHERE
+  - [x] LIMIT
+- [x] [`DELETE`](./samples/delete.ts)
+  - [x] WHERE
+  - [x] LIMIT
+- [x] [`INSERT`](./samples/insert.ts)
+- [x] [`TRANSACTION`](./samples/transaction.ts)
+- [x] [`SUBQUERIES`](./samples/subqueries.ts)
+
+---
 
 ### Credits
 
@@ -366,6 +392,6 @@ setBacktick('table.column');  // `table`.`column`
 | [`mysql2`](https://github.com/sidorares/node-mysql2) | [![sidorares](./.github/assets/readme/mysql2.svg)](https://github.com/sidorares) |
 | `mysql2-orm`                                         | [![wellwelwel](./.github/assets/readme/orm.svg)](https://github.com/wellwelwel)  |
 
-<hr />
+---
 
 - Check the original [**mysql2**](https://www.npmjs.com/package/mysql2) project [**here**](https://github.com/sidorares/node-mysql2).

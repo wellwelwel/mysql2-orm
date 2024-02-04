@@ -3,29 +3,22 @@
   "version": "2.1.4",
   "main": "./lib/index.js",
   "scripts": {
-    "prebuild": "rm -rf './lib';",
-    "build": "npx tsc;",
+    "prebuild": "rm -rf './lib'",
+    "build": "npx tsc",
     "eslint:checker": "npx eslint . --ext .js,.ts",
     "eslint:fix": "npx eslint . --fix",
     "prettier:checker": "npx prettier --check .",
     "prettier:fix": "npx prettier --write .github/workflows/*.yml .",
-    "init": "npm i --ignore-scripts;",
-    "init:update": "npm run init; npm run update;",
-    "update": "npx npu; npm i --ignore-scripts; npm audit fix;",
-    "test:docker": "cd .github/workflows/docker && docker compose -p pokemons down; docker compose -p pokemons up -d",
-    "pretest:build": "cd .github/workflows/tests && rm -rf ./lib;",
-    "test:build": "cd .github/workflows/tests && tsc -p ./tsconfig.json;",
-    "test:insert": "cd .github/workflows/tests && node lib/insert;",
-    "test:delete": "cd .github/workflows/tests && node lib/delete;",
-    "test:update": "cd .github/workflows/tests && node lib/update;",
-    "test:select": "cd .github/workflows/tests && node lib/select;",
-    "test:original": "cd .github/workflows/tests && node lib/get-connection;"
+    "update": "npx npu && npm i --ignore-scripts; npm audit fix",
+    "test:docker": "cd test && docker compose -p mysql2-orm down; docker compose -p mysql2-orm up -d",
+    "pretest": "npx tsc -p tsconfig.test.json && npx tsc --noEmit",
+    "test": "npx tsx test"
   },
   "dependencies": {
     "mysql2": "^3.9.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.7",
+    "@types/node": "^20.11.8",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "eslint": "^8.56.0",
@@ -58,7 +51,7 @@
     "url": "https://github.com/wellwelwel/mysql2-orm/issues"
   },
   "homepage": "https://github.com/wellwelwel/mysql2-orm#readme",
-  "description": "🎲 A basic ORM extending the package \"mysql2\"",
+  "description": "🎲 An ORM built on MySQL2, designed to be intuitive, productive and focused on essential functionality",
   "engines": {
     "node": ">=14.18.0 || >=16.0.0",
     "npm": ">=7.0.2"

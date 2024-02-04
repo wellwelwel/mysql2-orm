@@ -35,6 +35,7 @@
       }
     ],
     "eol-last": ["error", "always"],
+    "import/no-default-export": "error",
     "eqeqeq": [2, "always"],
     "no-var": 2,
     "block-scoped-var": 2,
