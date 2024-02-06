@@ -5,3 +5,4 @@ website/build
 website/.docusaurus
 website/.cache-loader
 website/**/*.mdx
+website/**/*.tsx
