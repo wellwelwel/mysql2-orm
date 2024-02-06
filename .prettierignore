@@ -1,10 +1,4 @@
 node_modules
-dist/
-docker/app
-docker/backup
 lib/
+website/
 *.d.ts
-website/build
-website/.docusaurus
-website/.cache-loader
-website/**/*.mdx
