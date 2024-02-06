@@ -2,3 +2,4 @@ node_modules
 lib/
 website/
 *.d.ts
+/CHANGELOG.md
