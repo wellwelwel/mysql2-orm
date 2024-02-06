@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/wellwelwel/mysql2-orm/issues"
   },
-  "homepage": "https://github.com/wellwelwel/mysql2-orm#readme",
+  "homepage": "https://wellwelwel.github.io/mysql2-orm/docs/",
   "description": "🎲 An ORM built on MySQL2, designed to be intuitive, productive and focused on essential functionality",
   "engines": {
     "node": ">=14.18.0 || >=16.0.0",

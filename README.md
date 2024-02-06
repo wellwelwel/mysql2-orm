@@ -19,7 +19,13 @@ An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive a
 [![GitHub Workflow Status (with event)][ci-image]][ci-url]
 [![License][license-image]][license-url]
 
-> This project uses **mysql2/promise**, **createPool** and **execute** behind the scenes.
+- This project uses **mysql2/promise**, **createPool** and **execute** behind the scenes.
+
+---
+
+🎲 [**Documentation Website**](https://wellwelwel.github.io/mysql2-orm/docs/)
+
+---
 
 ## Table of Contents
 
