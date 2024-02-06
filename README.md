@@ -24,17 +24,13 @@ An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive a
 ## Table of Contents
 
 - [Why](#why)
-- [Installation](#installation)
+- [Documentation](#documentation)
 - [Quickstart](#quickstart)
   - [Installation](#installation)
   - [Import](#import)
-    - [ES Modules](#es-modules)
-    - [CommonJS](#commonjs)
   - [Connect](#connect)
+  - [Basic Usage Example](#basic-usage-example)
   - [Close the Connection](#close-the-connection)
-- [Documentation](#documentation)
-- [Basic Usage Example](#basic-usage-example)
-- [When Not to Use the ORM Class](#when-not-to-use-the-orm-class)
 - [Curiosity](#curiosity)
   - [Why a dice?](#why-a-dice)
 - [Acknowledgements](#acknowledgements)
@@ -49,6 +45,12 @@ An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive a
 - It will smartly detect and release the connection when using `commit` or `rollback` in a transaction.
 - It exposes the `execute` and `query` original methods from [**MySQL2**][mysql2] Pool class.
 - **Strictly Typed:** No usage of `any`, `as` neither `satisfies` at all.
+
+---
+
+## Documentation
+
+See detailed specifications and usage in [**Documentation**](https://wellwelwel.github.io/mysql2-orm/docs/category/documentation) section for queries, advanced concepts and much more.
 
 ---
 
@@ -70,16 +72,8 @@ npm i -D @types/node
 
 ### Import
 
-#### ES Modules
-
 ```ts
 import { MySQL } from 'mysql2-orm';
-```
-
-#### CommonJS
-
-```ts
-const { MySQL } = require('mysql2-orm');
 ```
 
 ---
@@ -87,8 +81,6 @@ const { MySQL } = require('mysql2-orm');
 ### Connect
 
 ```ts
-import { MySQL } from 'mysql2-orm';
-
 const pool = new MySQL({
   host: '',
   user: '',
@@ -97,31 +89,13 @@ const pool = new MySQL({
 });
 ```
 
-### Close the Connection
-
-```ts
-await pool.end();
-```
-
 ---
 
-## Documentation
-
-See detailed specifications and usage in [**Documentation**](https://wellwelwel.github.io/mysql2-orm/docs/category/documentation) section.
-
----
-
-## Basic Usage Example
+### Basic Usage Example
 
 The following example is based on **TypeScript** and **ES Modules**, but you can also use **JavaScript** and **CommonJS**.
 
 ```ts
-import { MySQL } from 'mysql2-orm';
-
-const pool = new MySQL({
-  // ...
-});
-
 const user = await pool.select({
   table: 'users',
   where: OP.eq('id', 16),
@@ -136,7 +110,7 @@ const user = await pool.select({
 > It's equivalent to:
 >
 > ```ts
-> import mysql from 'mysql2/promise';
+> import mysql, { RowDataPacket } from 'mysql2/promise';
 >
 > const pool = mysql.createPool({
 >   // ...
@@ -152,15 +126,11 @@ const user = await pool.select({
 
 ---
 
-## When Not to Use the ORM Class
+### Close the Connection
 
-- ⚠️ Avoid using the ORM transaction
-  in scenarios that require parallel execution of multiple transactions in asynchronous
-  loops (no `await`). The connection management can hinder efficiency in high concurrency
-  scenarios where several transactions need to be processed at the same time in the
-  same node process. This limitation doesn't apply to **QueryBuilder** or scenarios
-  that properly utilize synchronous operations and `await` to manage transactions.
-- When you need _Models_ (such as [Sequelize](https://sequelize.org), [TypeORM](https://typeorm.io), etc.).
+```ts
+await pool.end();
+```
 
 ---
 
