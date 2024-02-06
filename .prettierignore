@@ -4,3 +4,7 @@ docker/app
 docker/backup
 lib/
 *.d.ts
+website/build
+website/.docusaurus
+website/.cache-loader
+website/**/*.mdx
