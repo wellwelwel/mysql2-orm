@@ -1,0 +1,22 @@
+---
+sidebar_position: 6
+tags: [OP, Operators]
+---
+
+# lt (lessThan)
+
+> lt(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` < ?', params: [16] }
+ */
+OP.lt('id', 16);
+
+/**
+ * { condition: '`createdAt` < ?', params: ['2024-01-01'] }
+ */
+OP.lt('createdAt', '2024-01-01');
+```

@@ -1,5 +1,5 @@
 {
-  "include": ["src"],
+  "include": ["test"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ES2016",
@@ -16,8 +16,6 @@
     "sourceMap": false,
     "esModuleInterop": true,
     "noEmitOnError": true,
-    "declaration": true,
-    "declarationDir": "lib",
-    "outDir": "lib"
+    "noEmit": true
   }
 }

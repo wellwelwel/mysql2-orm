@@ -1,0 +1,453 @@
+---
+sidebar_position: 1
+---
+
+# SELECT
+
+> For **WHERE** examples, please see the **WHERE** section.
+
+## Simple SELECT
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+/**
+ * @return false | RowDataPacket[]
+ */
+await pool.select({
+  table: 'test',
+});
+```
+
+> SQL Query
+
+```sql
+SELECT * FROM `test`
+```
+
+<hr />
+
+## SELECT (columns: string[])
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+  columns: ['foo'],
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+/**
+ * @return false | RowDataPacket[]
+ */
+await pool.select({
+  table: 'test',
+  columns: ['foo'],
+});
+```
+
+> SQL Query
+
+```sql
+SELECT `foo` FROM `test`
+```
+
+<hr />
+
+## SELECT (columns: string)
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+  columns: 'COUNT(*) AS `total`',
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+/**
+ * @return false | RowDataPacket[]
+ */
+await pool.select({
+  table: 'test',
+  columns: 'COUNT(*) AS `total`',
+});
+```
+
+> SQL Query
+
+```sql
+SELECT COUNT(*) AS `total` FROM `test`
+```
+
+<hr />
+
+## SELECT (limit: number)
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+  limit: 10,
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+/**
+ * @return false | RowDataPacket[]
+ */
+await pool.select({
+  table: 'test',
+  limit: 10,
+});
+```
+
+> SQL Query
+
+```sql
+SELECT * FROM `test` LIMIT ?
+-- params: ['10']
+```
+
+- By using `limit: 1`, it will return a single **row** (`RowDataPacket`).
+
+<hr />
+
+## SELECT (offset: number)
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+  limit: 10,
+  offset: 20,
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.select({
+  table: 'test',
+  limit: 10,
+  offset: 20,
+});
+```
+
+> SQL Query
+
+```sql
+SELECT * FROM `test` LIMIT ? OFFSET ?
+-- params: ['10', '20']
+```
+
+- By using `limit: 1`, it will return a single **row**.
+
+<hr />
+
+## SELECT (orderBy: [string, 'ASC' | 'DESC'])
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  table: 'test',
+  orderBy: ['id'],
+  // orderBy: ['id', 'ASC'],
+  // orderBy: ['id', 'DESC'],
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.select({
+  table: 'test',
+  orderBy: ['id'],
+  // orderBy: ['id', 'ASC'],
+  // orderBy: ['id', 'DESC'],
+});
+```
+
+> SQL Query
+
+```sql
+SELECT * FROM `test` ORDER BY `id` ASC
+```
+
+<hr />
+
+## SELECT (groupBy: string)
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  columns: '`age`, COUNT(*) AS `total`',
+  table: 'users',
+  groupBy: 'age',
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.select({
+  columns: '`age`, COUNT(*) AS `total`',
+  table: 'users',
+  groupBy: 'age',
+});
+```
+
+> SQL Query
+
+```sql
+SELECT `age`, COUNT(*) AS `total` FROM `users` GROUP BY `age`
+```
+
+<hr />
+
+## SELECT (join: JoinOptions | JoinOptions[])
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.select({
+  columns: ['users.name', 'users.age'],
+  table: 'preferences',
+  join: {
+    type: 'left',
+    table: 'users',
+    on: {
+      a: 'preferences.userId',
+      b: 'users.id',
+    },
+  },
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.select({
+  columns: ['users.name', 'users.age'],
+  table: 'preferences',
+  join: {
+    type: 'left',
+    table: 'users',
+    on: {
+      a: 'preferences.userId',
+      b: 'users.id',
+    },
+  },
+});
+```
+
+> SQL Query
+
+```sql
+SELECT `users`.`name`, `users`.`age`
+FROM `preferences`
+LEFT JOIN `users` ON `preferences`.`userId` = `users`.`id`
+```
+
+- You can insert multiple `JOIN` by using them within an array.
+
+<hr />
+
+## Available options
+
+```ts
+// highlight-start
+import { QueryOptions } from 'mysql2/promise.js';
+// highlight-end
+
+export type SelectOptions = {
+  distinct?: boolean;
+  columns?: string | string[];
+  table: string;
+  join?: JoinOptions | JoinOptions[];
+  where?: string | NestedCondition;
+  limit?: number;
+  offset?: number;
+  groupBy?: string;
+  orderBy?: [string] | [string, 'ASC' | 'DESC'];
+  params?: Param[];
+
+  // MySQL2 ORM class only
+  typeCast?: QueryOptions['typeCast'];
+  rowsAsArray?: QueryOptions['rowsAsArray'];
+};
+
+export type JoinOptions = {
+  type: 'left' | 'right' | 'inner' | 'cross';
+  table: string;
+  on: {
+    a: string;
+    b: string;
+  };
+  outer?: boolean;
+};
+```
+
+<hr />
+
+## Type Assertion
+
+The `select` method provides type assertion with the **MySQL2 ORM** class.
+
+```ts
+import { RowDataPacket } from 'mysql2/promise';
+import { MySQL } from 'mysql2-orm';
+
+// highlight-start
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+interface User extends RowDataPacket {
+  id: number;
+  name: string;
+}
+
+/**
+ * @return false | User[]
+ */
+const users = await pool.select<User[]>({
+  table: 'test',
+});
+
+/**
+ * @return false | User
+ */
+const user = await pool.select<User[]>({
+  table: 'test',
+  limit: 1,
+});
+```
+
+:::note
+
+In these examples, `User[]` should be used for type assertion regardless of the return being `User[]` or `User`.<br />
+The return type as `User` or `User[]` is determined by `limit`, not the type assertion itself:
+
+- **If no `limit` is set or it's greater than 1:** `User[]` will be returned.
+- **Setting `limit: 1`:** `User` will be returned.
+
+:::

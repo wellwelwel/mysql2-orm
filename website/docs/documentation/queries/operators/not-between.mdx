@@ -1,0 +1,17 @@
+---
+sidebar_position: 14
+tags: [OP, Operators]
+---
+
+# notBetween
+
+> notBetween(column: string, params: [Param, Param])
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`createdAt` NOT BETWEEN ? AND ?', params: ['2023-01-01', '2024-01-01'] }
+ */
+OP.notBetween('createdAt', ['2023-01-01', '2024-01-01']);
+```

@@ -1,0 +1,352 @@
+---
+slug: /
+position: 1
+title: Getting Started
+description: An ORM built on MySQL2, designed to be intuitive, productive and focused on essential functionality.
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import { PageTitle } from '@site/src/components/PageTitle';
+import { FAQ } from '@site/src/components/FAQ';
+import Logo from '@site/static/img/favicon.svg';
+import { Dices, Database, XOctagon } from 'lucide-react';
+
+<PageTitle title='MySQL2 ORM | Getting Started' />
+
+[npm-image]: https://img.shields.io/npm/v/mysql2-orm.svg
+[npm-url]: https://npmjs.org/package/mysql2-orm
+[downloads-image]: https://img.shields.io/npm/dt/mysql2-orm.svg
+[downloads-url]: https://npmjs.org/package/mysql2-orm
+[ci-url]: https://github.com/wellwelwel/mysql2-orm/actions/workflows/ci.yml?query=branch%3Amain
+[ci-image]: https://img.shields.io/github/actions/workflow/status/wellwelwel/mysql2-orm/ci.yml?event=push&style=flat&label=ci&branch=main
+[license-url]: https://github.com/wellwelwel/mysql2-orm/blob/main/License
+[license-image]: https://img.shields.io/npm/l/mysql2-orm.svg?maxAge=2592000
+[mysql2]: https://github.com/sidorares/node-mysql2
+
+# MySQL2 ORM
+
+<div className='title-section'>
+<aside>
+An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive and focused on essential functionality.
+
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![GitHub Workflow Status (with event)][ci-image]][ci-url]
+[![License][license-image]][license-url]
+
+> This project uses **mysql2/promise**, **createPool** and **execute** behind the scenes.
+
+</aside>
+  <aside>
+    <Logo className='logo' width={64} height={64} />
+  </aside>
+</div>
+
+## Why
+
+- An user-friendly ORM for **INSERT**, **SELECT**, **UPDATE**, **DELETE** and **WHERE** clauses.
+- Automatic **Prepared Statements** (including **LIMIT** and **OFFSET**).
+- You can also simply use **QueryBuilder** to mount your queries and use them in your original [**MySQL2**][mysql2] connection.
+- It will smartly detect and release the connection when using `commit` or `rollback` in a transaction.
+- It exposes the `execute` and `query` original methods from [**MySQL2**][mysql2] Pool class.
+- **Strictly Typed:** No usage of `any`, `as` neither `satisfies` at all.
+
+<hr />
+
+## Installation
+
+<Tabs>
+  <TabItem default value='TypeScript'>
+
+```bash
+npm i mysql2-orm
+npm i -D @types/node
+```
+
+  </TabItem>
+  <TabItem value='JavaScript' default>
+
+```bash
+npm i mysql2-orm
+```
+
+  </TabItem>
+</Tabs>
+
+<hr />
+
+## Getting Started
+
+### Connect
+
+```ts
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  host: '',
+  user: '',
+  database: '',
+  // ...
+});
+```
+
+> Credentials extends [**PoolOptions**](https://sidorares.github.io/node-mysql2/docs/examples/connections/create-pool) from [**MySQL2**][mysql2].
+
+### Close Connection
+
+```ts
+await pool.end();
+```
+
+<hr />
+
+## Documentation
+
+See detailed specifications and usage in [**Documentation**](/docs/category/documentation) section.
+
+<hr />
+
+## Comparing with [**MySQL2**][mysql2]
+
+**MySQL2 ORM** can be used in two ways:
+
+- **MySQL2 ORM** Class
+- **QueryBuilder** (constructor only)
+
+> The following examples are based on **TypeScript** and **ES Modules**, but you can also use **JavaScript** and **CommonJS**.
+
+### Returning a single user
+
+<Tabs>
+  <TabItem value='MySQL2 ORM' default>
+
+```ts
+import { MySQL, OP } from 'mysql2-orm';
+
+export const getUser = async (pool: MySQL, id: number) => {
+  const user = await pool.select({
+    table: 'users',
+    where: OP.eq('id', id),
+    limit: 1,
+  });
+
+  return user;
+};
+```
+
+> Due to `limit: 1`, it returns a direct object with the row result.
+
+<FAQ title={<><ins>OP</ins> Explanation</>}>
+
+**OP** = Operation 🧙🏻
+
+`OP.eq`: is **column** equal to **value**<br/>
+
+See all available operators [here](/docs/category/operators).
+
+</FAQ >
+
+  </TabItem>
+  <TabItem value='MySQL2'>
+
+```ts
+import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+
+export const getUser = async (pool: Pool | PoolConnection, id: number) => {
+  const sql = 'SELECT * FROM `users` WHERE `id` = ?';
+  const params = [id];
+
+  try {
+    const [users] = await pool.execute<RowDataPacket[]>(sql, params);
+    const user = users?.[0] || false;
+
+    return user;
+  } catch (_) {
+    return false;
+  }
+};
+```
+
+  </TabItem>
+  <TabItem value='QueryBuilder + MySQL2'>
+
+```ts
+import { QueryBuilder, OP } from 'mysql2-orm';
+import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+
+export const getUser = async (pool: Pool | PoolConnection, id: number) => {
+  const { sql, params } = QueryBuilder.select({
+    table: 'users',
+    where: OP.eq('id', id),
+    limit: 1,
+  });
+
+  try {
+    const [users] = await pool.execute<RowDataPacket[]>(sql, params);
+    const user = users?.[0] || false;
+
+    return user;
+  } catch (_) {
+    return false;
+  }
+};
+```
+
+<FAQ title={<><ins>OP</ins> Explanation</>}>
+
+**OP** = Operation 🧙🏻
+
+`OP.eq`: is **column** equal to **value**<br/>
+
+See all available operators [here](/docs/category/operators).
+
+</FAQ >
+
+  </TabItem>
+</Tabs>
+
+<hr />
+
+### Returning enabled users based on their specializations
+
+<Tabs>
+  <TabItem value='MySQL2 ORM' default>
+
+```ts
+import { MySQL, OP, Param } from 'mysql2-orm';
+
+export const getUsersBySpecializations = async (
+  pool: MySQL,
+  specializations: Param[]
+) => {
+  const users = await pool.select({
+    table: 'users',
+    columns: ['name', 'age'],
+    where: [
+      OP.eq('status', true),
+      'AND',
+      OP.in('specialization', specializations),
+    ],
+    orderBy: ['name'],
+    limit: 10,
+  });
+
+  return users || [];
+};
+```
+
+<FAQ title={<><ins>OP</ins> Explanation</>}>
+
+**OP** = Operation 🧙🏻
+
+`OP.eq`: is **column** equal to **value**<br/>
+`OP.in`: is in **column** [**values**,]
+
+See all available operators [here](/docs/category/operators).
+
+</FAQ >
+
+  </TabItem>
+  <TabItem value='MySQL2'>
+
+```ts
+import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+
+export const getUsersBySpecializations = async (
+  pool: Pool | PoolConnection,
+  specializations: unknown[]
+) => {
+  const specializationsPlaceholders = specializations.map(() => '?').join(', ');
+  const sql = `SELECT \`name\`, \`age\` FROM \`users\` WHERE \`status\` = ? AND \`specialization\` IN (${specializationsPlaceholders}) ORDER BY \`name\` ASC LIMIT ?`;
+  const params = [true, ...specializations, '10'];
+
+  try {
+    const [users] = await pool.execute<RowDataPacket[]>(sql, params);
+
+    return users;
+  } catch (_) {
+    return [];
+  }
+};
+```
+
+  </TabItem>
+  <TabItem value='QueryBuilder + MySQL2'>
+
+```ts
+import { QueryBuilder, OP, Param } from 'mysql2-orm';
+import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+
+export const getUsersBySpecializations = async (
+  pool: Pool | PoolConnection,
+  specializations: Param[]
+) => {
+  const { sql, params } = QueryBuilder.select({
+    table: 'users',
+    columns: ['name', 'age'],
+    where: [
+      OP.eq('status', true),
+      'AND',
+      OP.in('specialization', specializations),
+    ],
+    orderBy: ['name'],
+    limit: 10,
+  });
+
+  try {
+    const [users] = await pool.execute<RowDataPacket[]>(sql, params);
+
+    return users;
+  } catch (_) {
+    return [];
+  }
+};
+```
+
+<FAQ title={<><ins>OP</ins> Explanation</>}>
+
+**OP** = Operation 🧙🏻
+
+`OP.eq`: is **column** equal to **value**<br/>
+`OP.in`: is in **column** [**values**,]
+
+See all available operators [here](/docs/category/operators).
+
+</FAQ >
+
+  </TabItem>
+</Tabs>
+
+<hr />
+
+## When Not to Use the ORM Class
+
+- <XOctagon className='warn' width={13} height={13} /> Avoid using the ORM transaction
+  in scenarios that require parallel execution of multiple transactions in asynchronous
+  loops (no `await`). The connection management can hinder efficiency in high concurrency
+  scenarios where several transactions need to be processed at the same time in the
+  same node process. This limitation doesn't apply to **QueryBuilder** or scenarios
+  that properly utilize synchronous operations and `await` to manage transactions.
+- When you need _Models_ (such as [Sequelize](https://sequelize.org), [TypeORM](https://typeorm.io), etc.).
+
+<hr />
+
+## Curiosity
+
+### Why a dice?
+
+While in English <ins>dice</ins> and <ins>data</ins> each have their own word, in Brazil, both the dice and "data" are called "**dado**" even though they refer to different things:
+
+|              | 🇺🇸 English | 🇧🇷 Portuguese (BR) |
+| ------------ | ---------- | ------------------ |
+| <Database /> | data       | dado               |
+| <Dices />    | dice       | **dado**           |
+
+<hr />
+
+## Acknowledgements
+
+- [**MySQL2**][mysql2] is maintained by [**@sidorares**](https://github.com/sidorares).
+- The operator names **eq**, **ne**, **gt**, **lt**, **gte** and **lte** are inspired by [**Sequelize**](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators).
+- [**Contributors**](https://github.com/wellwelwel/mysql2-orm/graphs/contributors).

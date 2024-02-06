@@ -1,371 +1,154 @@
-<h2 align="center">MySQL ORM</h2>
-<p align="center">🎲 This is a basic <b>ORM project</b> created from the <a href="https://www.npmjs.com/package/mysql2">mysql2/promise</a></p>
+[mysql2]: https://github.com/sidorares/node-mysql2
+[npm-image]: https://img.shields.io/npm/v/mysql2-orm.svg
+[npm-url]: https://npmjs.org/package/mysql2-orm
+[downloads-image]: https://img.shields.io/npm/dt/mysql2-orm.svg
+[downloads-url]: https://npmjs.org/package/mysql2-orm
+[ci-url]: https://github.com/wellwelwel/mysql2-orm/actions/workflows/ci.yml?query=branch%3Amain
+[ci-image]: https://img.shields.io/github/actions/workflow/status/wellwelwel/mysql2-orm/ci.yml?event=push&style=flat&label=ci&branch=main
+[license-url]: https://github.com/wellwelwel/mysql2-orm/blob/main/License
+[license-image]: https://img.shields.io/npm/l/mysql2-orm.svg?maxAge=2592000
 
-## Install
+# MySQL2 ORM
+
+<img align="right" width="64" height="64" alt="Logo" src="website/static/img/favicon.svg">
+
+An **ORM** built on [**MySQL2**][mysql2], designed to be intuitive, productive and focused on essential functionality.
+
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![GitHub Workflow Status (with event)][ci-image]][ci-url]
+[![License][license-image]][license-url]
+
+> This project uses **mysql2/promise**, **createPool** and **execute** behind the scenes.
+
+## Table of Contents
+
+- [Why](#why)
+- [Documentation](#documentation)
+- [Quickstart](#quickstart)
+  - [Installation](#installation)
+  - [Import](#import)
+  - [Connect](#connect)
+  - [Basic Usage Example](#basic-usage-example)
+  - [Close the Connection](#close-the-connection)
+- [Curiosity](#curiosity)
+  - [Why a dice?](#why-a-dice)
+- [Acknowledgements](#acknowledgements)
+
+---
+
+## Why
+
+- An user-friendly ORM for **INSERT**, **SELECT**, **UPDATE**, **DELETE** and **WHERE** clauses.
+- Automatic **Prepared Statements** (including **LIMIT** and **OFFSET**).
+- You can also simply use **QueryBuilder** to mount your queries and use them in your original [**MySQL2**][mysql2] connection.
+- It will smartly detect and release the connection when using `commit` or `rollback` in a transaction.
+- It exposes the `execute` and `query` original methods from [**MySQL2**][mysql2] Pool class.
+- **Strictly Typed:** No usage of `any`, `as` neither `satisfies` at all.
+
+---
+
+## Documentation
+
+See detailed specifications and usage in [**Documentation**](https://wellwelwel.github.io/mysql2-orm/docs/category/documentation) section for queries, advanced concepts and much more.
+
+---
+
+## Quickstart
+
+### Installation
 
 ```shell
-   npm i mysql2-orm
+npm i mysql2-orm
 ```
 
-<hr />
+If you are using TypeScript, you will need to install [@types/node](https://www.npmjs.com/package/@types/node).
 
-### Usage
+```shell
+npm i -D @types/node
+```
 
-#### Import
+---
 
--  ES Modules
+### Import
 
-   ```javascript
-   import { MySQL } from 'mysql2-orm';
-   ```
+```ts
+import { MySQL } from 'mysql2-orm';
+```
 
--  CommonJS
+---
 
-   ```javascript
-   const { MySQL } = require('mysql2-orm');
-   ```
+### Connect
 
--  TypeScript
-
-   ```javascript
-   import { MySQL } from 'mysql2-orm';
-   import { ... } from 'mysql2-orm/types';
-   ```
-
-   -  You will need to install [`@types/node`](https://www.npmjs.com/package/@types/node)
-
-      -  `npm i @types/node -D`
-
-<hr />
-
-#### Connect
-
-```javascript
-const mysql = new MySQL({
-   host: 'localhost',
-   port: 3306,
-   user: 'user',
-   password: 'pass',
-   database: 'dbname',
+```ts
+const pool = new MySQL({
+  host: '',
+  user: '',
+  database: '',
+  // ...
 });
 ```
 
-#### Close Connection
+---
 
-```javascript
-await mysql.end();
-```
+### Basic Usage Example
 
-<hr />
+The following example is based on **TypeScript** and **ES Modules**, but you can also use **JavaScript** and **CommonJS**.
 
-### Querying
-
-#### Select
-
--  Select all rows
-
-   ```javascript
-   await mysql.select({
-      table: 'pokemons',
-   });
-
-   // Returns an array with the results
-   ```
-
-   ```sql
-   SELECT * FROM `pokemons`;
-   ```
-
--  Select specific rows
-
-   ```javascript
-   await mysql.select({
-      columns: ['name', 'type'],
-      table: 'pokemons',
-      where: 'type IN(?, ?)',
-      params: ['water', 'grass'],
-      limit: 2,
-      orderBy: ['name', 'DESC'],
-   });
-
-   // Returns an array with the results
-   ```
-
-   ```sql
-   SELECT `name`, `type` FROM `pokemons` WHERE type IN(?, ?) ORDER BY `name` DESC LIMIT 2;
-
-   -- params: [ 'water', 'grass' ]
-   ```
-
--  Count all rows
-
-   ```javascript
-   await mysql.select({
-      columns: 'COUNT(*) AS `total`',
-      table: 'pokemons',
-      limit: 1,
-   });
-
-   // Because "limit: 1", it returns a direct object with the result: { total: ... }
-   ```
-
-   ```sql
-   SELECT COUNT(*) AS `total` FROM `pokemons` LIMIT 1;
-   ```
-
--  JOIN: `inner` | `left` | `right` | `cross`
-
-   ```javascript
-   await mysql.select({
-      columns: ['pokemons.name', 'pokemons.type'],
-      table: 'captureds',
-      join: {
-         type: 'left',
-         // outer: false,
-         table: 'pokemons',
-         on: {
-            a: 'captureds.pokemonId',
-            b: 'pokemons.id',
-         },
-      },
-      where: 'userId = ?',
-      params: [1],
-   });
-
-   // Returns an array with the results
-   ```
-
-   ```sql
-   SELECT `pokemons`.`name`, `pokemons`.`type`
-      FROM `captureds`
-      LEFT JOIN `pokemons`
-         ON `captureds`.`pokemonId` = `pokemons`.`id`
-      WHERE userId = ?
-   ;
-
-   -- params: [ 1 ]
-   ```
-
-   -  The **`join` option** accetps a direct `object` or an `array` with multiple `JOIN`
-
-<br />
-
-> `distinct`, `columns`, `join`, `where`, `params`, `limit` and `orderBy` are optionals  
-> `columns`: the default value is `'*'` and accepts a string or an array with the columns  
-> `orderBy`: `[ 'column' ]` or `[ 'column', 'ASC' | 'DESC' ]`
-
-<hr />
-
-#### Insert
-
--  Insert a single row
-
-   ```javascript
-   await mysql.insert({
-      table: 'pokemons',
-      values: {
-         name: 'Mew',
-         type: 'psychic',
-      },
-   });
-
-   // Returns: last insert id
-   ```
-
-   ```sql
-   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?);
-
-   -- params: [ 'Mew', 'psychic' ]
-   ```
-
--  Insert multiple rows
-
-   ```js
-   await mysql.insert({
-      table: 'pokemons',
-      values: [
-         { name: 'Pichu', type: 'electric' },
-         { name: 'Mewtwo', type: 'psychic' },
-      ],
-   });
-
-   // Returns: first row id from multiple insert
-   ```
-
-   ```sql
-   INSERT INTO `pokemons` (`name`, `type`) VALUES (?, ?), (?, ?);
-
-   -- params: [ 'Pichu', 'electric', 'Mewtwo', 'psychic' ]
-   ```
-
-<hr />
-
-#### Update
-
--  Example
-
-   ```javascript
-   await mysql.update({
-      table: 'pokemons',
-      set: {
-         name: 'Squirtle',
-         type: 'water',
-      },
-      where: 'id = ?',
-      params: [2],
-      limit: 1,
-   });
-
-   // Returns the number of affectedRows
-   ```
-
-   ```sql
-   UPDATE `pokemons` SET `name` = ?, `type` = ? WHERE id = ? LIMIT 1;
-
-   -- params: [ 'Squirtle', 'water', 2 ]
-   ```
-
-<br />
-
-> `where`, `params` and `limit` are optionals
-
-<hr />
-
-#### Delete
-
--  Example
-
-   ```javascript
-   await mysql.delete({
-      table: 'pokemons',
-      where: 'id = ?',
-      params: [2],
-      limit: 1,
-   });
-
-   // Returns the number of affectedRows
-   ```
-
-   ```sql
-   DELETE FROM `pokemons` WHERE id = ? LIMIT 1;
-
-   -- params: [ 2 ]
-   ```
-
-<br />
-
-> `where`, `params` and `limit` are optionals
-
-<hr />
-
-#### Mount Query Only
-
-```javascript
-await mysql.select({
-   // ...
-   mountOnly: true,
+```ts
+const user = await pool.select({
+  table: 'users',
+  where: OP.eq('id', 16),
+  limit: 1,
 });
 ```
 
--  Returns an object with the final `query` and `params`, without execute the query
--  Works with `select`, `insert` and `update` ORM functions
--  This is very useful for [subqueries](./samples/subqueries.ts) (`WHERE`, `UNION`, `INTERSECT`, etc.) 😉
+- See all available operators (**OP**) [here](https://wellwelwel.github.io/mysql2-orm/docs/category/operators).
+- Due to `limit: 1`, it returns a direct object with the **row** result.
+- The result of **getUser** will be a `RowDataPacket` or `false`.
 
-<hr />
+> It's equivalent to:
+>
+> ```ts
+> import mysql, { RowDataPacket } from 'mysql2/promise';
+>
+> const pool = mysql.createPool({
+>   // ...
+> });
+>
+> const [users] = execute<RowDataPacket[]>(
+>   'SELECT * FROM `users` WHERE `id` = ? LIMIT ?',
+>   [16, '1']
+> );
+>
+> const user = users?.[0] || false;
+> ```
 
-#### [`mysql2`](https://www.npmjs.com/package/mysql2) Originals
+---
 
--  Getting the original [**mysql2**](https://www.npmjs.com/package/mysql2) connection:
+### Close the Connection
 
-   ```javascript
-   const mysql2 = await mysql.getConnection();
-
-   /**
-    * mysql2.execute,
-    * mysql2.beginTransaction,
-    * mysql2.commit,
-    * mysql2.rollback,
-    * etc.
-    *
-    * See all options in: https://github.com/sidorares/node-mysql2
-    */
-   ```
-
--  Mixing the Packages
-
-   ```javascript
-   await mysql2.beginTransaction();
-
-   try {
-      const inserted = await mysql.insert({
-         table: 'pokemons',
-         values: [
-            { name: 'Pichu', type: 'electric' },
-            { name: 'Mewtwo', type: 'psychic' },
-         ],
-      });
-
-      if (!inserted) throw new Error('Something is wrong, coming back');
-
-      await mysql2.commit();
-   } catch (error) {
-      await mysql2.rollback();
-      console.error(error.message);
-   } finally {
-      await mysql.end();
-   }
-   ```
-
-<hr />
-
-### Others
-
-#### Backticks
-
-<!-- prettier-ignore -->
-```javascript
-import { setBacktick } from 'mysql2-orm';
-
-setBacktick('table');         // `table`
-setBacktick('column');        // `column`
-setBacktick('table.column');  // `table`.`column`
+```ts
+await pool.end();
 ```
 
-<hr />
+---
 
-### Notes
+## Curiosity
 
--  See practical examples in [samples](./samples/)
--  Use `verbose` to see final queries in console
+### Why a dice?
 
--  -  [x] Features
-      -  [x] [`SELECT`](./samples/select.ts)
-         -  [x] DISTINCT
-         -  [x] JOIN
-         -  [x] WHERE
-         -  [x] GROUP BY
-         -  [x] ORDER BY
-         -  [x] LIMIT
-         -  [x] OFFSET
-      -  [x] [`UPDATE`](./samples/update.ts)
-         -  [x] WHERE
-         -  [x] LIMIT
-      -  [x] [`DELETE`](./samples/delete.ts)
-         -  [x] WHERE
-         -  [x] LIMIT
-      -  [x] [`INSERT`](./samples/insert.ts)
-      -  [x] [`TRANSACTION`](./samples/transaction.ts)
-      -  [x] [`SUBQUERIES`](./samples/subqueries.ts)
+While in English <ins>dice</ins> and <ins>data</ins> each have their own word, in Brazil, both the dice and "data" are called "**dado**" even though they refer to different things:
 
-<hr />
+|     | 🇺🇸 English | 🇧🇷 Portuguese (BR) |
+| --- | ---------- | ------------------ |
+| 💾  | data       | dado               |
+| 🎲  | dice       | **dado**           |
 
-### Credits
+---
 
-| Project                                              | Author                                                                           |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [`mysql2`](https://github.com/sidorares/node-mysql2) | [![sidorares](./.github/assets/readme/mysql2.svg)](https://github.com/sidorares) |
-| `mysql2-orm`                                         | [![wellwelwel](./.github/assets/readme/orm.svg)](https://github.com/wellwelwel)  |
+## Acknowledgements
 
-<hr />
-
--  Check the original [**mysql2**](https://www.npmjs.com/package/mysql2) project [**here**](https://github.com/sidorares/node-mysql2).
+- [**MySQL2**][mysql2] is maintained by [**@sidorares**](https://github.com/sidorares).
+- The operator names **eq**, **ne**, **gt**, **lt**, **gte** and **lte** are inspired by [**Sequelize**](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators).
+- [**Contributors**](https://github.com/wellwelwel/mysql2-orm/graphs/contributors).

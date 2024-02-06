@@ -1,0 +1,27 @@
+---
+sidebar_position: 4
+tags: [OP, Operators]
+---
+
+# notLike
+
+> notLike(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`email` NOT LIKE ?', params: ['%gmail.com'] }
+ */
+OP.notLike('email', '%gmail.com');
+
+/**
+ * { condition: '`email` NOT LIKE ?', params: ['john@%'] }
+ */
+OP.notLike('email', 'john@%');
+
+/**
+ * { condition: '`email` NOT LIKE ?', params: ['%gmail%'] }
+ */
+OP.notLike('email', '%gmail%');
+```

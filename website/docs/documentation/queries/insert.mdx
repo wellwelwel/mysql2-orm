@@ -1,0 +1,109 @@
+---
+sidebar_position: 0
+---
+
+# INSERT
+
+## Single insertion
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.insert({
+  table: 'test',
+  values: {
+    column1: 'foo',
+    column2: 1,
+  },
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.insert({
+  table: 'test',
+  values: {
+    column1: 'foo',
+    column2: 1,
+  },
+});
+```
+
+> SQL Query
+
+```sql
+INSERT INTO `test` (`column1`, `column2`) VALUES (?, ?)
+-- params: ['foo', 1]
+```
+
+<hr />
+
+## Multiple insertions
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.insert({
+  table: 'test',
+  values: [
+    {
+      column1: 'foo',
+      column2: 1,
+    },
+    {
+      column1: 'bar',
+      column2: 2,
+    },
+  ],
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.insert({
+  table: 'test',
+  values: [
+    {
+      column1: 'foo',
+      column2: 1,
+    },
+    {
+      column1: 'bar',
+      column2: 2,
+    },
+  ],
+});
+```
+
+> SQL Query
+
+```sql
+INSERT INTO `test` (`column1`, `column2`) VALUES (?, ?), (?, ?)
+-- params: ['foo', 1,  'bar', 2]
+```

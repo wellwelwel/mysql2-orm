@@ -1,0 +1,37 @@
+---
+sidebar_position: 11
+tags: [OP, Operators, Sub Query, Sub Queries]
+---
+
+# in
+
+> in(column: string, params: Param[])<br/>
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` IN (?, ?, ?)', params: [16, 20, 50] }
+ */
+OP.in('id', [16, 20, 50]);
+```
+
+> in(column: string, subquery: string, params: Param[])
+
+```ts
+import { OP, Param, QueryBuilder } from 'mysql2-orm';
+
+/**
+ * { sql: 'SELECT `id` FROM `users` WHERE `status` IN (?, ?)', params: [0, 2] }
+ */
+const subquery = QueryBuilder.select({
+  columns: ['id'],
+  table: 'users',
+  where: [OP.in('status', [0, 2])],
+});
+
+/**
+ * { condition: '`userId` IN (SELECT `id` FROM `users` WHERE `status` IN (?, ?))', params: [0, 2] }
+ */
+OP.in('userId', subquery.sql, subquery.params);
+```

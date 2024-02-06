@@ -1,0 +1,22 @@
+---
+sidebar_position: 8
+tags: [OP, Operators]
+---
+
+# lte (lessThanOrEqual)
+
+> lte(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` <= ?', params: [16] }
+ */
+OP.lte('id', 16);
+
+/**
+ * { condition: '`createdAt` <= ?', params: ['2024-01-01'] }
+ */
+OP.lte('createdAt', '2024-01-01');
+```

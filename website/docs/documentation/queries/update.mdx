@@ -1,0 +1,103 @@
+---
+sidebar_position: 3
+---
+
+# UPDATE
+
+> For **WHERE** examples, please see the **WHERE** section.
+
+## Simple update
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.update({
+  table: 'users',
+  set: {
+    name: 'John',
+  },
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.update({
+  table: 'users',
+  set: {
+    name: 'John',
+  },
+});
+```
+
+> SQL Query
+
+```sql
+UPDATE `users` SET `name` = ?
+-- params: ['John']
+```
+
+<hr />
+
+## Update multiple columns
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.update({
+  table: 'users',
+  set: {
+    name: 'John',
+    age: 29,
+    // highlight-start
+    // ...
+    // highlight-end
+  },
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.update({
+  table: 'users',
+  set: {
+    name: 'John',
+    age: 29,
+    // highlight-start
+    // ...
+    // highlight-end
+  },
+});
+```
+
+> SQL Query
+
+```sql
+UPDATE `users` SET `name` = ?, `age` = ?
+-- params: ['John', 29]
+```

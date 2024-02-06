@@ -1,0 +1,37 @@
+---
+sidebar_position: 12
+tags: [OP, Operators, Sub Query, Sub Queries]
+---
+
+# notIn
+
+> notIn(column: string, params: Param[])<br/>
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` IN (?, ?, ?)', params: [16, 20, 50] }
+ */
+OP.notIn('id', [16, 20, 50]);
+```
+
+> notIn(column: string, subquery: string, params: Param[])
+
+```ts
+import { OP, Param, QueryBuilder } from 'mysql2-orm';
+
+/**
+ * { sql: 'SELECT `id` FROM `users` WHERE `status` IN (?, ?)', params: [0, 2] }
+ */
+const subquery = QueryBuilder.select({
+  columns: ['id'],
+  table: 'users',
+  where: [OP.in('status', [0, 2])],
+});
+
+/**
+ * { condition: '`userId` NOT IN (SELECT `id` FROM `users` WHERE `status` IN (?, ?))', params: [0, 2] }
+ */
+OP.notIn('userId', subquery.sql, subquery.params);
+```

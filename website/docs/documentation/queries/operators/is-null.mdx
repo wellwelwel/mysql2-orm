@@ -1,0 +1,22 @@
+---
+sidebar_position: 9
+tags: [OP, Operators]
+---
+
+# isNull
+
+> isNull(column: string)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`preferences` IS NULL', params: [] }
+ */
+OP.isNull('preferences');
+
+/**
+ * { condition: '`updatedAt` IS NULL', params: [] }
+ */
+OP.isNull('updatedAt');
+```

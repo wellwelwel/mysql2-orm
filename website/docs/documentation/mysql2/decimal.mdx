@@ -1,0 +1,14 @@
+# DECIMAL
+
+> From [MySQL2 Documentation](https://sidorares.github.io/node-mysql2/docs/documentation#known-incompatibilities-with-node-mysql)
+
+- `DECIMAL` and `NEWDECIMAL` types always returned as `string` unless you pass this config option:
+
+```ts
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+  decimalNumbers: true,
+});
+```

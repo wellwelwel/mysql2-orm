@@ -1,6 +1,4 @@
 node_modules
-dist
-docker/app
-docker/backup
-lib
+lib/
+website/
 *.d.ts
