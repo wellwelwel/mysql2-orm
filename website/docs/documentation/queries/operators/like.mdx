@@ -1,0 +1,27 @@
+---
+sidebar_position: 3
+tags: [OP, Operators]
+---
+
+# like
+
+> like(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`email` LIKE ?', params: ['%gmail.com'] }
+ */
+OP.like('email', '%gmail.com');
+
+/**
+ * { condition: '`email` LIKE ?', params: ['john@%'] }
+ */
+OP.like('email', 'john@%');
+
+/**
+ * { condition: '`email` LIKE ?', params: ['%gmail%'] }
+ */
+OP.like('email', '%gmail%');
+```

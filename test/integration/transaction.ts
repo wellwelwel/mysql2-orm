@@ -65,7 +65,7 @@ const times = 100;
       set: {
         age: 99,
       },
-      where: [OP.is('id', 15)],
+      where: [OP.eq('id', 15)],
       // Expected to be ignored
       params: [999999999],
     });
@@ -75,7 +75,7 @@ const times = 100;
 
     const deleted = await mysql.delete({
       table: 'users',
-      where: [OP.is('id', 20)],
+      where: [OP.eq('id', 20)],
       limit: 1,
       // Expected to be ignored
       params: [999999999],

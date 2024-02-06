@@ -1,0 +1,22 @@
+---
+sidebar_position: 2
+tags: [OP, Operators]
+---
+
+# ne (notEqual)
+
+> ne(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` != ?', params: [16] }
+ */
+OP.ne('id', 16);
+
+/**
+ * { condition: '`name` != ?', params: ['John'] }
+ */
+OP.ne('name', 'John');
+```

@@ -21,29 +21,55 @@ type Getter<T, Method extends keyof T> = T extends {
   : never;
 
 export class MySQL {
+  private throw: boolean;
   private debug: boolean;
+  private verbose: boolean;
   private credentials: PoolOptions;
   private connection: Pool;
   private PoolConnection: PoolConnection | null = null;
 
   constructor(credentials: PoolOptions) {
+    this.throw = false;
     this.debug = false;
+    this.verbose = false;
     this.credentials = credentials;
     this.connection = createPool(this.credentials);
   }
 
-  private handleError(error: unknown): void {
+  private handleError(error: unknown): false {
     if (this.debug) {
       console.log(error);
     }
+
+    return false;
   }
 
   private get currentConnection(): Pool | PoolConnection {
     return this.PoolConnection ? this.PoolConnection : this.connection;
   }
 
-  setDebug(value: boolean) {
-    this.debug = Boolean(value);
+  enableDebug() {
+    this.debug = true;
+  }
+
+  disableDebug() {
+    this.debug = false;
+  }
+
+  enableThrow() {
+    this.throw = true;
+  }
+
+  enableVerbose() {
+    this.verbose = true;
+  }
+
+  disableThrow() {
+    this.throw = false;
+  }
+
+  disableVerbose() {
+    this.verbose = false;
   }
 
   connect(credentials?: PoolOptions) {
@@ -56,8 +82,8 @@ export class MySQL {
 
       return true;
     } catch (error) {
-      this.handleError(error);
-      return false;
+      if (this.throw) throw error;
+      return this.handleError(error);
     }
   }
 
@@ -68,7 +94,7 @@ export class MySQL {
       const result = INSERT<ValueObjectSchema>(options);
       const { sql, params } = result;
 
-      if (this.debug) console.log(result);
+      if (this.verbose) console.log(result);
 
       const [resultSetHeader] = await this.currentConnection.execute<
         ResultSetHeader | ResultSetHeader[]
@@ -78,8 +104,8 @@ export class MySQL {
         ? resultSetHeader[0].insertId
         : resultSetHeader.insertId;
     } catch (error) {
-      this.handleError(error);
-      return false;
+      if (this.throw) throw error;
+      return this.handleError(error);
     }
   }
 
@@ -96,7 +122,7 @@ export class MySQL {
       const result = SELECT(options);
       const { sql, params } = result;
 
-      if (this.debug) console.log(result);
+      if (this.verbose) console.log(result);
 
       const [rows] = await this.currentConnection.execute<T>({
         sql,
@@ -108,8 +134,8 @@ export class MySQL {
       if (options?.limit === 1) return rows[0];
       return rows;
     } catch (error) {
-      this.handleError(error);
-      return false;
+      if (this.throw) throw error;
+      return this.handleError(error);
     }
   }
 
@@ -118,7 +144,7 @@ export class MySQL {
       const result = UPDATE(options);
       const { sql, params } = result;
 
-      if (this.debug) console.log(result);
+      if (this.verbose) console.log(result);
 
       const [resultSetHeader] = await this.currentConnection.execute<
         ResultSetHeader | ResultSetHeader[]
@@ -128,8 +154,8 @@ export class MySQL {
         ? resultSetHeader[0].affectedRows
         : resultSetHeader.affectedRows;
     } catch (error) {
-      this.handleError(error);
-      return false;
+      if (this.throw) throw error;
+      return this.handleError(error);
     }
   }
 
@@ -140,7 +166,7 @@ export class MySQL {
       const result = DELETE(options);
       const { sql, params } = result;
 
-      if (this.debug) console.log(result);
+      if (this.verbose) console.log(result);
 
       const [resultSetHeader] = await this.currentConnection.execute<
         ResultSetHeader | ResultSetHeader[]
@@ -150,8 +176,8 @@ export class MySQL {
         ? resultSetHeader[0].affectedRows
         : resultSetHeader.affectedRows;
     } catch (error) {
-      this.handleError(error);
-      return false;
+      if (this.throw) throw error;
+      return this.handleError(error);
     }
   }
 

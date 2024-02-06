@@ -1,0 +1,192 @@
+---
+sidebar_position: 5
+---
+
+import { XOctagon } from 'lucide-react';
+
+# WHERE Clauses
+
+The **WHERE** clause is essential for filtering records in `SELECT`, `UPDATE`, and `DELETE` operations.<br/>
+With **MySQL2 ORM**, you can use the [**OP**](/docs/category/operators) object to construct complex queries efficiently.
+
+The operator names **eq**, **ne**, **gt**, **lt**, **gte** and **lte** are inspired by [**Sequelize**](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators).<br />
+See all available operators [**here**](/docs/category/operators).
+
+> The following examples apply as well to **SELECT**, **UPDATE**, **DELETE** from both **MySQL2 ORM** class and **QueryBuilder**.
+
+## Single condition
+
+```ts
+// highlight-start
+import { MySQL, OP } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+
+await pool.select({
+  table: 'users',
+  // highlight-end
+  where: OP.eq('id', 15),
+  // highlight-start
+});
+// highlight-end
+```
+
+> SQL Query
+
+```sql
+-- highlight-start
+SELECT * FROM `users`
+-- highlight-end
+WHERE `id` = ?
+
+-- params [15]
+```
+
+<hr />
+
+## Multiple conditions
+
+Ensure to use **AND**, **OR**, **XOR** or **NOT** between each condition.
+
+```ts
+// highlight-start
+import { MySQL, OP } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+
+await pool.select({
+  table: 'users',
+  // highlight-end
+  where: [OP.in('id', [15, 30]), 'AND', OP.eq('status', 1)],
+  // highlight-start
+});
+// highlight-end
+```
+
+> SQL Query
+
+```sql
+-- highlight-start
+SELECT * FROM `users`
+-- highlight-end
+WHERE `id` IN (?, ?) AND `status` = ?
+
+-- params [15, 30, 1]
+```
+
+<hr />
+
+## Combine conditions
+
+Ensure to use **AND**, **OR**, **XOR** or **NOT** between each combination.
+
+```ts
+// highlight-start
+import { MySQL, OP } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+
+await pool.select({
+  table: 'users',
+  // highlight-end
+  where: [[OP.lt('age', 18)], 'OR', [OP.eq('status', 'locked')]],
+  // highlight-start
+});
+// highlight-end
+```
+
+> SQL Query
+
+```sql
+-- highlight-start
+SELECT * FROM `users`
+-- highlight-end
+WHERE (`age` < ?) OR (`status` = ?)
+
+-- params [18, 'locked']
+```
+
+<hr />
+
+## Combine multiple conditions
+
+Ensure to use **AND**, **OR**, **XOR** or **NOT** between each condition and combination.
+
+```ts
+// highlight-start
+import { MySQL, OP } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+
+await pool.select({
+  table: 'users',
+  // highlight-end
+  where: [
+    [OP.gte('age', 18), 'AND', OP.eq('status', 'locked')],
+    'OR',
+    [OP.lt('age', 18), 'AND', OP.eq('status', 'enabled')],
+  ],
+  // highlight-start
+});
+// highlight-end
+```
+
+> SQL Query
+
+```sql
+-- highlight-start
+SELECT * FROM `users`
+-- highlight-end
+WHERE (`age` >= ? AND `status` = ?) OR (`age` < ? AND `status` = ?);
+
+-- params [18, 'locked', 18, 'enabled']
+```
+
+- You can play into depth with combined conditions by encapsulating your conditions in an array. But note that this can become complex.
+
+<hr />
+
+## Manual conditions
+
+You can also use `where` as a string, creating your conditions and passing the params manually:
+
+> <XOctagon className='warn' width={13} height={13} /> **Discouraged:** You may prefer
+> to use a more robust ORM in these cases that covers native **MySQL Server** functions,
+> such as `NOW`, `YEAR`, etc.
+
+```ts
+// highlight-start
+import { MySQL, OP } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+
+await pool.select({
+  table: 'users',
+  // highlight-end
+  where: 'YEAR(`createdAt`) = ?',
+  params: [2024],
+  // highlight-start
+});
+// highlight-end
+```
+
+> SQL Query
+
+```sql
+-- highlight-start
+SELECT * FROM `users`
+-- highlight-end
+WHERE YEAR(`createdAt`) = ?
+
+-- params [2024]
+```

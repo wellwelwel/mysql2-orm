@@ -1,0 +1,84 @@
+---
+sidebar_position: 4
+---
+
+# DELETE
+
+> For **WHERE** examples, please see the **WHERE** section.
+
+## Delete all rows
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.delete({
+  table: 'temp',
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.delete({
+  table: 'temp',
+});
+```
+
+> SQL Query
+
+```sql
+DELETE FROM `temp`
+```
+
+<hr />
+
+## Limit the rows to be deleted
+
+### QueryBuilder
+
+```ts
+// highlight-start
+import { QueryBuilder } from 'mysql2-orm';
+// highlight-end
+
+const { sql, params } = QueryBuilder.delete({
+  table: 'test',
+  limit: 1,
+});
+```
+
+### MySQL2 ORM Class
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+await pool.delete({
+  table: 'test',
+  limit: 1,
+});
+```
+
+> SQL Query
+
+```sql
+DELETE FROM `test` LIMIT ?
+-- params: ['1']
+```

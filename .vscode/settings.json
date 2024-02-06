@@ -11,7 +11,10 @@
   "eslint.validate": ["ts"],
   "[markdown]": {
     "files.trimTrailingWhitespace": false,
-    "editor.trimAutoWhitespace": false,
-    "files.trimFinalNewlines": false
+    "editor.trimAutoWhitespace": false
+  },
+  "[mdx]": {
+    "files.trimTrailingWhitespace": false,
+    "editor.trimAutoWhitespace": false
   }
 }

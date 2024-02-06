@@ -2,7 +2,7 @@ import { Param } from '../../types/param.js';
 import { backtick } from '../../helpers/backtick.js';
 import { Condition } from '../../types/conditions.js';
 
-const is = (column: string, param: Param): Condition => {
+const equal = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} = ?`;
 
   return {
@@ -11,7 +11,7 @@ const is = (column: string, param: Param): Condition => {
   };
 };
 
-const isNot = (column: string, param: Param): Condition => {
+const notEqual = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} != ?`;
 
   return {
@@ -20,7 +20,7 @@ const isNot = (column: string, param: Param): Condition => {
   };
 };
 
-const isHigher = (column: string, param: Param): Condition => {
+const greaterThan = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} > ?`;
 
   return {
@@ -29,7 +29,7 @@ const isHigher = (column: string, param: Param): Condition => {
   };
 };
 
-const isLower = (column: string, param: Param): Condition => {
+const lessThan = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} < ?`;
 
   return {
@@ -38,7 +38,7 @@ const isLower = (column: string, param: Param): Condition => {
   };
 };
 
-const isHigherOrEqual = (column: string, param: Param): Condition => {
+const greaterThanOrEqual = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} >= ?`;
 
   return {
@@ -47,7 +47,7 @@ const isHigherOrEqual = (column: string, param: Param): Condition => {
   };
 };
 
-const isLowerOrEqual = (column: string, param: Param): Condition => {
+const lessThanOrEqual = (column: string, param: Param): Condition => {
   const condition = `${backtick(column)} <= ?`;
 
   return {
@@ -74,7 +74,6 @@ const notLike = (column: string, param: Param): Condition => {
   };
 };
 
-// Sobrecargas de função
 function In(column: string, params: Param[]): Condition;
 function In(column: string, subquery: string, params: Param[]): Condition;
 function In(
@@ -94,8 +93,27 @@ function In(
   };
 }
 
-const notIn = (column: string, params: Param[]): Condition => {
-  const condition = `${backtick(column)} NOT IN (${params.map(() => '?').join(', ')})`;
+function notIn(column: string, params: Param[]): Condition;
+function notIn(column: string, subquery: string, params: Param[]): Condition;
+function notIn(
+  column: string,
+  firstArg: Param[] | string,
+  secondArg?: Param[]
+): Condition {
+  if (Array.isArray(firstArg))
+    return {
+      condition: `${backtick(column)} NOT IN (${firstArg.map(() => '?').join(', ')})`,
+      params: firstArg,
+    };
+
+  return {
+    condition: `${backtick(column)} NOT IN (${firstArg})`,
+    params: secondArg || [],
+  };
+}
+
+const between = (column: string, params: [Param, Param]): Condition => {
+  const condition = `${backtick(column)} BETWEEN ? AND ?`;
 
   return {
     condition,
@@ -103,8 +121,8 @@ const notIn = (column: string, params: Param[]): Condition => {
   };
 };
 
-const between = (column: string, params: [Param, Param]): Condition => {
-  const condition = `${backtick(column)} BETWEEN ? AND ?`;
+const notBetween = (column: string, params: [Param, Param]): Condition => {
+  const condition = `${backtick(column)} NOT BETWEEN ? AND ?`;
 
   return {
     condition,
@@ -131,17 +149,24 @@ const isNotNull = (column: string): Condition => {
 };
 
 export const OP = {
-  is,
-  isHigher,
-  isLower,
-  isHigherOrEqual,
-  isLowerOrEqual,
-  isNot,
+  equal,
+  eq: equal,
+  notEqual,
+  ne: notEqual,
+  greaterThan,
+  gt: greaterThan,
+  lessThan,
+  lt: lessThan,
+  greaterThanOrEqual,
+  gte: greaterThanOrEqual,
+  lessThanOrEqual,
+  lte: lessThanOrEqual,
   like,
   notLike,
   in: In,
   notIn,
   between,
+  notBetween,
   isNull,
   isNotNull,
 };

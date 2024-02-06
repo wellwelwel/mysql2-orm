@@ -1,0 +1,22 @@
+---
+sidebar_position: 7
+tags: [OP, Operators]
+---
+
+# gte (greaterThanOrEqual)
+
+> gte(column: string, param: Param)
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`id` >= ?', params: [16] }
+ */
+OP.gte('id', 16);
+
+/**
+ * { condition: '`createdAt` >= ?', params: ['2024-01-01'] }
+ */
+OP.gte('createdAt', '2024-01-01');
+```

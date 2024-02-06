@@ -1,0 +1,99 @@
+---
+sidebar_position: 4
+---
+
+# Error Handling and Debugging
+
+By default, **MySQL2 ORM** is designed to avoid using the `try-catch` block in its methods, but it's possible to enable error throwing or debug them in cosole.
+
+> This page doesn't apply to the `execute` and `query` methods exposed, nor to the adapted `beginTransaction`, `commit`, `rollback` and `release` methods, which remain as they are in the original [**MySQL2**](https://sidorares.github.io/node-mysql2/docs/faq/how-to-handle-errors).<br/>
+
+## Enable Error Throwing
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.enableThrow();
+```
+
+## Disable Error Throwing
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.disableThrow();
+```
+
+<hr />
+
+## Enable Error Debug
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.enableDebug();
+```
+
+## Disable Error Debug
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.disableDebug();
+```
+
+<hr />
+
+## Enable Query Debug (verbose)
+
+> Be careful, showing queries in the console can expose sensitive data.
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.enableVerbose();
+```
+
+## Disable Query Debug (verbose)
+
+```ts
+// highlight-start
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  // ...
+});
+// highlight-end
+
+pool.disableVerbose();
+```

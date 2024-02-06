@@ -21,7 +21,7 @@ const select2 = QueryBuilder.select({
     },
     outer: true,
   },
-  where: [OP.is('preferences.mysql', true)],
+  where: [OP.eq('preferences.mysql', true)],
   limit: 20,
   offset: 10,
   distinct: true,
@@ -31,9 +31,9 @@ const select2 = QueryBuilder.select({
 const select3 = QueryBuilder.select({
   table: 'users',
   where: [
-    [OP.is('name', 'John'), 'AND', OP.isLower('age', 18)],
+    [OP.eq('name', 'John'), 'AND', OP.lt('age', 18)],
     'OR',
-    [OP.is('name', 'Mary'), 'AND', OP.isHigher('age', 20)],
+    [OP.eq('name', 'Mary'), 'AND', OP.gt('age', 20)],
   ],
 });
 
@@ -62,6 +62,11 @@ const select5 = QueryBuilder.select({
   orderBy: ['name', 'DESC'],
   // Expected to be ignored
   params: [999999999],
+});
+
+const select6 = QueryBuilder.select({
+  table: 'users',
+  where: OP.eq('id', 16),
 });
 
 process.on('exit', () => {
@@ -114,4 +119,9 @@ process.on('exit', () => {
   assert.deepStrictEqual(select5.params[0], 1);
   assert.deepStrictEqual(select5.params[1], 2);
   assert.deepStrictEqual(select5.params[2], '2');
+
+  // SELECT 6
+  assert.deepStrictEqual(select6.sql, 'SELECT * FROM `users` WHERE`id` = ?');
+  assert(select6.params.length === 1);
+  assert.deepStrictEqual(select6.params[0], 16);
 });

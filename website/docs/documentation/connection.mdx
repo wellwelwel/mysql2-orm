@@ -1,0 +1,74 @@
+---
+sidebar_position: 1
+tags: [Connection, createPool]
+---
+
+# Connection
+
+For detailed **PoolOptions**, see the [**MySQL2 `createPool` examples**](https://sidorares.github.io/node-mysql2/docs/examples/connections/create-pool).
+
+## URI
+
+```ts
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL(
+  'mysql://username:password@hostname.psdb.cloud/database-name?ssl={"rejectUnauthorized":true}'
+);
+```
+
+## PoolOptions
+
+```ts
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  host: '',
+  user: '',
+  database: '',
+  password: '',
+  // ...
+});
+```
+
+## URI from PoolOptions
+
+```ts
+import { MySQL } from 'mysql2-orm';
+
+const pool = new MySQL({
+  uri: 'mysql://username:password@hostname.psdb.cloud/database-name?ssl={"rejectUnauthorized":true}',
+  // ...
+});
+```
+
+---
+
+## Available Connection Methods
+
+- [**insert**](/docs/documentation/queries/insert)
+- [**select**](/docs/documentation/queries/select)
+- [**update**](/docs/documentation/queries/update)
+- [**delete**](/docs/documentation/queries/delete)
+- **beginTransaction** (_adapted from [**MySQL2**](https://github.com/sidorares/node-mysql2) and preserving its original usage_)
+- **commit** (_adapted from [**MySQL2**](https://github.com/sidorares/node-mysql2) and preserving its original usage_)
+- **rollback** (_adapted from [**MySQL2**](https://github.com/sidorares/node-mysql2) and preserving its original usage_)
+- **release** (_adapted from [**MySQL2**](https://github.com/sidorares/node-mysql2) and preserving its original usage_)
+- **execute** (_original exposed [**MySQL2**](https://github.com/sidorares/node-mysql2) method_)
+- **query** (_original exposed [**MySQL2**](https://github.com/sidorares/node-mysql2) method_)
+
+:::info
+**MySQL2 ORM** exposes only the `execute` and `query` methods from Pool.
+
+If you need to use other methods (such as `getConnection`), please use the original [**MySQL2**](https://github.com/sidorares/node-mysql2) instead.
+:::
+
+---
+
+## Closing the Connection
+
+```ts
+// ...
+
+await pool.end();
+```

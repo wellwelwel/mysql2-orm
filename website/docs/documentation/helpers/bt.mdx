@@ -1,0 +1,22 @@
+# bt (backtick)
+
+`bt` formats identifiers by enclosing them in backticks, supporting both single and compound identifiers.
+
+```ts
+import { bt } from 'mysql2-orm';
+
+/**
+ * @result `column`
+ */
+bt('column');
+
+/**
+ * @result `table`.`column`
+ */
+bt('table.column');
+
+/**
+ * @result `db`.`table`
+ */
+bt('db.table');
+```

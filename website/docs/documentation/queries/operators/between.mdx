@@ -1,0 +1,17 @@
+---
+sidebar_position: 13
+tags: [OP, Operators]
+---
+
+# between
+
+> between(column: string, params: [Param, Param])
+
+```ts
+import { OP, Param } from 'mysql2-orm';
+
+/**
+ * { condition: '`createdAt` BETWEEN ? AND ?', params: ['2023-01-01', '2024-01-01'] }
+ */
+OP.between('createdAt', ['2023-01-01', '2024-01-01']);
+```

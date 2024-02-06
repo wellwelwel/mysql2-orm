@@ -44,6 +44,14 @@ export const where = (values?: string | NestedCondition): Result => {
 
   result.clause += ` WHERE`;
 
+  if (isCondition(values)) {
+    result.clause += `${values.condition}`;
+
+    if (values.params.length > 0) {
+      Object.assign(result.params, [...result.params, ...values.params]);
+    }
+  }
+
   const mountCondition = (conditions: typeof values, space = false) => {
     if (!Array.isArray(conditions)) return;
 
