@@ -1,8 +1,4 @@
 node_modules
 /lib
 /resources
-website/build
-website/.docusaurus
-website/.cache-loader
-website/**/*.mdx
-website/**/*.tsx
+/website
