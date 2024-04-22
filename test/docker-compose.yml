@@ -1,9 +1,7 @@
 version: '3.9'
 services:
   db:
-    image: mysql:debian
-    platform: linux/amd64
-    restart: always
+    image: mysql
     environment:
       MYSQL_DATABASE: 'test'
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
@@ -11,20 +9,12 @@ services:
       - '3306:3306'
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 2s
+      timeout: 2s
+      retries: 30
 
-  mysql2-orm:
-    image: node:lts-alpine
-    working_dir: /usr/app
-    volumes:
-      - ./node-mysql2:/usr/app:ro
-    command: npm run test
-    environment:
-      MYSQL_HOST: db
-      use-compression: 0
-      use-tls: 0
+  wait-for-db:
+    image: alpine
     depends_on:
       db:
         condition: service_healthy
