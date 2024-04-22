@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🤝 Release Please
-        uses: google-github-actions/release-please-action@v4
+        uses: google-github-actions/release-please-action@v3
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
