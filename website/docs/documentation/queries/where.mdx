@@ -158,9 +158,9 @@ WHERE (`age` >= ? AND `status` = ?) OR (`age` < ? AND `status` = ?);
 
 You can also use `where` as a string, creating your conditions and passing the params manually:
 
-> <XOctagon className='warn' width={13} height={13} /> **Discouraged:** You may prefer
-> to use a more robust ORM in these cases that covers native **MySQL Server** functions,
-> such as `NOW`, `YEAR`, etc.
+> <XOctagon className='warn' width={13} height={13} /> **Discouraged:** You may
+> prefer to use a more robust ORM in these cases that covers native **MySQL
+> Server** functions, such as `NOW`, `YEAR`, etc.
 
 ```ts
 // highlight-start

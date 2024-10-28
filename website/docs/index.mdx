@@ -322,12 +322,13 @@ See all available operators [here](/docs/category/operators).
 
 ## When Not to Use the ORM Class
 
-- <XOctagon className='warn' width={13} height={13} /> Avoid using the ORM transaction
-  in scenarios that require parallel execution of multiple transactions in asynchronous
-  loops (no `await`). The connection management can hinder efficiency in high concurrency
-  scenarios where several transactions need to be processed at the same time in the
-  same node process. This limitation doesn't apply to **QueryBuilder** or scenarios
-  that properly utilize synchronous operations and `await` to manage transactions.
+- <XOctagon className='warn' width={13} height={13} /> Avoid using the ORM
+  transaction in scenarios that require parallel execution of multiple
+  transactions in asynchronous loops (no `await`). The connection management can
+  hinder efficiency in high concurrency scenarios where several transactions
+  need to be processed at the same time in the same node process. This
+  limitation doesn't apply to **QueryBuilder** or scenarios that properly
+  utilize synchronous operations and `await` to manage transactions.
 - When you need _Models_ (such as [Sequelize](https://sequelize.org), [TypeORM](https://typeorm.io), etc.).
 
 <hr />
