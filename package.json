@@ -19,10 +19,10 @@
     "posttest:ci": "npm run docker:down"
   },
   "dependencies": {
-    "mysql2": "^3.11.3"
+    "mysql2": "^3.11.5"
   },
   "devDependencies": {
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
@@ -32,9 +32,9 @@
     "eslint-plugin-prettier": "^5.2.1",
     "packages-update": "^2.0.0",
     "poku": "^2.7.1",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "license": "MIT",
   "repository": {
