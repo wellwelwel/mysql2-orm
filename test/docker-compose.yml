@@ -14,7 +14,7 @@ services:
       retries: 30
 
   wait-for-db:
-    image: alpine
+    image: busybox
     depends_on:
       db:
         condition: service_healthy
